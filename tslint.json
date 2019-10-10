@@ -1,5 +1,11 @@
 {
-  "extends": "tslint:recommended",
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "linterOptions": {
+    "exclude": [
+      "*.json",
+      "**/*.json"
+    ]
+  },
   "rules": {
     "array-type": false,
     "arrow-parens": false,
@@ -84,7 +90,10 @@
     "template-banana-in-box": true,
     "template-no-negated-async": true,
     "use-lifecycle-interface": true,
-    "use-pipe-transform-interface": true
+    "use-pipe-transform-interface": true,
+    "eofline": true,
+    "no-trailing-whitespace": true,
+    "semicolon": true
   },
   "rulesDirectory": [
     "codelyzer"
