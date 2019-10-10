@@ -6,6 +6,7 @@ import {
   MatInputModule,
   MatCheckboxModule,
   MatSidenavModule,
+  MatListModule,
   MatToolbarModule,
   MatProgressSpinnerModule,
   MatSnackBarModule
@@ -19,6 +20,7 @@ import {
     MatInputModule,
     MatCheckboxModule,
     MatSidenavModule,
+    MatListModule,
     MatToolbarModule,
     MatProgressSpinnerModule,
     MatSnackBarModule
@@ -30,6 +32,7 @@ import {
     MatInputModule,
     MatCheckboxModule,
     MatSidenavModule,
+    MatListModule,
     MatToolbarModule,
     MatProgressSpinnerModule,
     MatSnackBarModule

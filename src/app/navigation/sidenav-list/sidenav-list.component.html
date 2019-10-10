@@ -1,0 +1,24 @@
+<mat-nav-list>
+  <a mat-list-item routerLink="/tweets" (click)="onCloseSidenav()">
+    <mat-icon>list_alt</mat-icon>
+    <span class="nav-caption">Tweets</span>
+  </a>
+  <a mat-list-item routerLink="/users" (click)="onCloseSidenav()">
+    <mat-icon>people</mat-icon>
+    <span class="nav-caption">Users</span>
+  </a>
+  <a mat-list-item routerLink="/signup" (click)="onCloseSidenav()">
+    <mat-icon>face</mat-icon>
+    <span class="nav-caption">Signup</span>
+  </a>
+  <a mat-list-item routerLink="/signin" (click)="onCloseSidenav()">
+    <mat-icon>input</mat-icon>
+    <span class="nav-caption">Sign In</span>
+  </a>
+  <mat-list-item>
+    <button mat-icon-button (click)="onLogout()">
+      <mat-icon>eject</mat-icon>
+      <span class="nav-caption">Logout</span>
+    </button>
+  </mat-list-item>
+</mat-nav-list>
