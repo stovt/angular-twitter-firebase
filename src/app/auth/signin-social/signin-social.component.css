@@ -1,0 +1,16 @@
+.signin-social {
+  margin-top: 10px;
+}
+
+.signin-social h4 {
+  border-bottom: 1px solid #000;
+  line-height: 0.1em;
+  margin: 10px auto;
+  text-align: center;
+  width: 100%;
+}
+
+.signin-social span {
+  background-color: #fafafa;
+  padding: 0 10px;
+}
