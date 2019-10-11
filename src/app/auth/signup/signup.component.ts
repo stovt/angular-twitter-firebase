@@ -36,7 +36,7 @@ export class SignupComponent implements OnInit {
     const { firstName, lastName, email, password } = data;
 
     this.authService
-      .signUp({
+      .signUpWithEmailAndPassword({
         firstName,
         lastName,
         email,

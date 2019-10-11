@@ -23,6 +23,8 @@ export class SigninComponent implements OnInit {
 
   onSubmit({ email, password }: { email: string; password: string }) {
     this.isLoading = true;
-    this.authService.signIn({ email, password }).then(() => (this.isLoading = false));
+    this.authService
+      .signInWithEmailAndPassword({ email, password })
+      .then(() => (this.isLoading = false));
   }
 }

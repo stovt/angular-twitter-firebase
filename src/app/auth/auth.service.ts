@@ -46,7 +46,7 @@ export class AuthService {
       });
   }
 
-  signUp(authData: SignUpAuthData) {
+  signUpWithEmailAndPassword(authData: SignUpAuthData) {
     return this.afAuth.auth
       .createUserWithEmailAndPassword(authData.email, authData.password)
       .then(credential => {
@@ -58,23 +58,23 @@ export class AuthService {
       .catch(error => this.uiService.showSnackBar(error.message));
   }
 
-  signIn(authData: SignInAuthData) {
+  signInWithEmailAndPassword(authData: SignInAuthData) {
     return this.afAuth.auth
       .signInWithEmailAndPassword(authData.email, authData.password)
       .catch(error => this.uiService.showSnackBar(error.message));
   }
 
-  facebookSignIn() {
+  signInWithFacebook() {
     const provider = new auth.FacebookAuthProvider();
     this.socialSignIn(provider);
   }
 
-  googleSignIn() {
+  signInWithGoogle() {
     const provider = new auth.GoogleAuthProvider();
     this.socialSignIn(provider);
   }
 
-  githubSignIn() {
+  signInWithGithub() {
     const provider = new auth.GithubAuthProvider();
     this.socialSignIn(provider);
   }

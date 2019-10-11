@@ -24,6 +24,6 @@ export class GoogleComponent implements OnInit {
   ngOnInit() {}
 
   onSignInGoogle() {
-    this.authService.googleSignIn();
+    this.authService.signInWithGoogle();
   }
 }

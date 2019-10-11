@@ -24,6 +24,6 @@ export class FacebookComponent implements OnInit {
   ngOnInit() {}
 
   onSignInFacebook() {
-    this.authService.facebookSignIn();
+    this.authService.signInWithFacebook();
   }
 }

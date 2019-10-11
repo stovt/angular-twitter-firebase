@@ -24,6 +24,6 @@ export class GithubComponent implements OnInit {
   ngOnInit() {}
 
   onSignInGithub() {
-    this.authService.githubSignIn();
+    this.authService.signInWithGithub();
   }
 }
