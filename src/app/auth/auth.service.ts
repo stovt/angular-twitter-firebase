@@ -66,26 +66,17 @@ export class AuthService {
 
   facebookSignIn() {
     const provider = new auth.FacebookAuthProvider();
-    this.afAuth.auth
-      .signInWithPopup(provider)
-      .then(credential => this.updateUserData(credential.user))
-      .catch(error => this.uiService.showSnackBar(error.message));
+    this.socialSignIn(provider);
   }
 
   googleSignIn() {
     const provider = new auth.GoogleAuthProvider();
-    this.afAuth.auth
-      .signInWithPopup(provider)
-      .then(credential => this.updateUserData(credential.user))
-      .catch(error => this.uiService.showSnackBar(error.message));
+    this.socialSignIn(provider);
   }
 
   githubSignIn() {
     const provider = new auth.GithubAuthProvider();
-    this.afAuth.auth
-      .signInWithPopup(provider)
-      .then(credential => this.updateUserData(credential.user))
-      .catch(error => this.uiService.showSnackBar(error.message));
+    this.socialSignIn(provider);
   }
 
   signOut() {
@@ -106,5 +97,14 @@ export class AuthService {
     };
 
     userRef.set(data, { merge: true }).catch(error => this.uiService.showSnackBar(error.message));
+  }
+
+  private socialSignIn(
+    provider: auth.GoogleAuthProvider | auth.FacebookAuthProvider | auth.FacebookAuthProvider
+  ) {
+    this.afAuth.auth
+      .signInWithPopup(provider)
+      .then(credential => this.updateUserData(credential.user))
+      .catch(error => this.uiService.showSnackBar(error.message));
   }
 }
