@@ -1,27 +1,36 @@
-# AngularTwitterV2
+# Twitter - Made with Angular 8
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.6.
+Demo: [https://twitter-8cfba.firebaseapp.com/](https://twitter-8cfba.firebaseapp.com/)
 
-## Development server
+## Prerequisites
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Works with **Node.js** interpreter version **10.16.0**.
 
-## Code scaffolding
+[**Yarn**](https://yarnpkg.com/en/docs/install) or [**NPM**](https://www.npmjs.com/get-npm) package manager must be installed in the system. 
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+[**Firebase**](https://firebase.com/) account. Free Spark Plan works.
 
-## Build
+## Installation
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+After cloning the project, install its dependencies with this command:
 
-## Running unit tests
+```bash
+yarn install
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Creating a Firebase Project
 
-## Running end-to-end tests
+1. Go to [**Firebase Console**](https://console.firebase.google.com) and create your own project.
+2. In the project console go to **Project Settings** and copy firebase project setting to the **src/environments/environments.ts** file.
+3. Go to **Database** that is located under project console navigation group and create **Cloud Firestore**.
+5. Go to **Authentication** that is also located under project console navigation group and set up **Email/Password**, **Google**, **Facebook** and **GitHub**  sign-in methods.
+6. Deploy the application by running `firebase deploy`
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Running locally
 
-## Further help
+To run the app for local development use this command:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+```bash
+yarn start
+```
+This will start the development server (typically on the `localhost:4200`) which will force browser to reload each time you change the source code.
