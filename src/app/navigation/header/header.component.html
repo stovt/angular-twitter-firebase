@@ -13,14 +13,14 @@
       <li>
         <a routerLink="/users">Users</a>
       </li>
-      <li>
+      <li *ngIf="(isAuth$ | async) === false">
         <a routerLink="/signup">Sign Up</a>
       </li>
-      <li>
+      <li *ngIf="(isAuth$ | async) === false">
         <a routerLink="/signin">Sign In</a>
       </li>
-      <li>
-        <a style="cursor: pointer">Logout</a>
+      <li *ngIf="isAuth$ | async">
+        <a style="cursor: pointer" (click)="onLogout()">Logout</a>
       </li>
     </ul>
   </div>

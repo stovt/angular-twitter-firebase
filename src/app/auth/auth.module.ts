@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 import { AuthRoutingModule } from './auth-routing.module';
 import { SharedModule } from '../shared/shared.module';
@@ -18,6 +19,12 @@ import { FacebookComponent } from './signin-social/facebook/facebook.component';
     GoogleComponent,
     FacebookComponent
   ],
-  imports: [ReactiveFormsModule, HttpClientModule, AuthRoutingModule, SharedModule]
+  imports: [
+    ReactiveFormsModule,
+    HttpClientModule,
+    AngularFireAuthModule,
+    AuthRoutingModule,
+    SharedModule
+  ]
 })
 export class AuthModule {}
