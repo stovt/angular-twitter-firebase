@@ -10,6 +10,7 @@ import { SigninComponent } from './signin/signin.component';
 import { SigninSocialComponent } from './signin-social/signin-social.component';
 import { GoogleComponent } from './signin-social/google/google.component';
 import { FacebookComponent } from './signin-social/facebook/facebook.component';
+import { GithubComponent } from './signin-social/github/github.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { FacebookComponent } from './signin-social/facebook/facebook.component';
     SigninComponent,
     SigninSocialComponent,
     GoogleComponent,
-    FacebookComponent
+    FacebookComponent,
+    GithubComponent
   ],
   imports: [
     ReactiveFormsModule,

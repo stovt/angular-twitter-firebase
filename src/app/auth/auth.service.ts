@@ -74,7 +74,15 @@ export class AuthService {
 
   googleSignIn() {
     const provider = new auth.GoogleAuthProvider();
-    return this.afAuth.auth
+    this.afAuth.auth
+      .signInWithPopup(provider)
+      .then(credential => this.updateUserData(credential.user))
+      .catch(error => this.uiService.showSnackBar(error.message));
+  }
+
+  githubSignIn() {
+    const provider = new auth.GithubAuthProvider();
+    this.afAuth.auth
       .signInWithPopup(provider)
       .then(credential => this.updateUserData(credential.user))
       .catch(error => this.uiService.showSnackBar(error.message));
