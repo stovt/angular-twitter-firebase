@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import { AuthService } from '../auth.service';
+
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
@@ -9,7 +11,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class SigninComponent implements OnInit {
   signInForm: FormGroup;
 
-  constructor() {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
     this.signInForm = new FormGroup({
@@ -18,7 +20,7 @@ export class SigninComponent implements OnInit {
     });
   }
 
-  onSubmit(data: { email: string; password: string }) {
-    console.log(data);
+  onSubmit({ email, password }: { email: string; password: string }) {
+    this.authService.signIn({ email, password });
   }
 }

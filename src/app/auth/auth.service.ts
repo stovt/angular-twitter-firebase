@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import { UIService } from '../shared/ui.service';
 import { User } from './user.model';
+import { SignInAuthData, SignUpAuthData } from './auth-data.model';
+import { UIService } from '../shared/ui.service';
 import * as fromRoot from '../app.reducer';
 import * as Auth from './auth.actions';
 
@@ -44,6 +43,24 @@ export class AuthService {
         }
         this.router.navigate(['/']);
       });
+  }
+
+  signUp(authData: SignUpAuthData) {
+    this.afAuth.auth
+      .createUserWithEmailAndPassword(authData.email, authData.password)
+      .then(credential => {
+        this.updateUserData({
+          ...credential.user,
+          displayName: `${authData.firstName} ${authData.lastName}`
+        });
+      })
+      .catch(error => this.uiService.showSnackBar(error.message));
+  }
+
+  signIn(authData: SignInAuthData) {
+    this.afAuth.auth
+      .signInWithEmailAndPassword(authData.email, authData.password)
+      .catch(error => this.uiService.showSnackBar(error.message));
   }
 
   facebookSignIn() {
