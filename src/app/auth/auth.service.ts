@@ -9,6 +9,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
+import { UIService } from '../shared/ui.service';
 import { User } from './user.model';
 import * as fromRoot from '../app.reducer';
 import * as Auth from './auth.actions';
@@ -19,6 +20,7 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
     private router: Router,
+    private uiService: UIService,
     private store: Store<fromRoot.State>
   ) {}
 
@@ -35,7 +37,7 @@ export class AuthService {
       )
       .subscribe((user: User) => {
         if (user) {
-          this.store.dispatch(new Auth.SetUserId(user.userId));
+          this.store.dispatch(new Auth.SetUser(user));
           this.store.dispatch(new Auth.SetAuthenticated());
         } else {
           this.store.dispatch(new Auth.SetUnauthenticated());
@@ -44,22 +46,27 @@ export class AuthService {
       });
   }
 
-  async facebookSignIn() {
+  facebookSignIn() {
     const provider = new auth.FacebookAuthProvider();
-    const credential = await this.afAuth.auth.signInWithPopup(provider);
-    console.log('TCL: AuthService -> facebookSignIn -> credential', credential);
-    return this.updateUserData(credential.user);
+    this.afAuth.auth
+      .signInWithPopup(provider)
+      .then(credential => this.updateUserData(credential.user))
+      .catch(error => this.uiService.showSnackBar(error.message));
   }
 
-  async googleSignIn() {
+  googleSignIn() {
     const provider = new auth.GoogleAuthProvider();
-    const credential = await this.afAuth.auth.signInWithPopup(provider);
-    return this.updateUserData(credential.user);
+    this.afAuth.auth
+      .signInWithPopup(provider)
+      .then(credential => this.updateUserData(credential.user))
+      .catch(error => this.uiService.showSnackBar(error.message));
   }
 
-  async signOut() {
-    await this.afAuth.auth.signOut();
-    return this.router.navigate(['/']);
+  signOut() {
+    this.afAuth.auth
+      .signOut()
+      .then(() => this.router.navigate(['/']))
+      .catch(error => this.uiService.showSnackBar(error.message));
   }
 
   updateUserData(user: firebase.User) {
@@ -72,6 +79,6 @@ export class AuthService {
       displayName: user.displayName
     };
 
-    return userRef.set(data, { merge: true });
+    userRef.set(data, { merge: true }).catch(error => this.uiService.showSnackBar(error.message));
   }
 }

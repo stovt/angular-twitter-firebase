@@ -1,12 +1,14 @@
-import { AuthActions, SET_AUTHENTICATED, SET_UNAUTHENTICATED, SET_USER_ID } from './auth.actions';
+import { AuthActions, SET_AUTHENTICATED, SET_UNAUTHENTICATED, SET_USER } from './auth.actions';
+
+import { User } from './user.model';
 
 export interface State {
-  userId: string;
+  user: User;
   isAuthenticated: boolean;
 }
 
 const initialState: State = {
-  userId: null,
+  user: null,
   isAuthenticated: false
 };
 
@@ -21,12 +23,12 @@ export function authReducer(state = initialState, action: AuthActions) {
       return {
         ...state,
         isAuthenticated: false,
-        userId: null
+        user: null
       };
-    case SET_USER_ID:
+    case SET_USER:
       return {
         ...state,
-        userId: action.payload
+        user: action.payload
       };
     default:
       return state;
@@ -34,4 +36,4 @@ export function authReducer(state = initialState, action: AuthActions) {
 }
 
 export const getIsAuth = (state: State) => state.isAuthenticated;
-export const getUserId = (state: State) => state.userId;
+export const getUser = (state: State) => state.user;
