@@ -10,6 +10,7 @@ import { AuthService } from '../auth.service';
 })
 export class SignupComponent implements OnInit {
   signUpForm: FormGroup;
+  isLoading = false;
 
   constructor(private authService: AuthService) {}
 
@@ -31,14 +32,17 @@ export class SignupComponent implements OnInit {
     password: string;
     confirmPassword: string;
   }) {
+    this.isLoading = true;
     const { firstName, lastName, email, password } = data;
 
-    this.authService.signUp({
-      firstName,
-      lastName,
-      email,
-      password
-    });
+    this.authService
+      .signUp({
+        firstName,
+        lastName,
+        email,
+        password
+      })
+      .then(() => (this.isLoading = false));
   }
 
   private equalsTo(compareTo: string): ValidatorFn {

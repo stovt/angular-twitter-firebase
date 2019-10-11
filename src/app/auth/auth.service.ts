@@ -38,15 +38,16 @@ export class AuthService {
         if (user) {
           this.store.dispatch(new Auth.SetUser(user));
           this.store.dispatch(new Auth.SetAuthenticated());
+          this.router.navigate(['/']);
         } else {
           this.store.dispatch(new Auth.SetUnauthenticated());
+          this.router.navigate(['/signin']);
         }
-        this.router.navigate(['/']);
       });
   }
 
   signUp(authData: SignUpAuthData) {
-    this.afAuth.auth
+    return this.afAuth.auth
       .createUserWithEmailAndPassword(authData.email, authData.password)
       .then(credential => {
         this.updateUserData({
@@ -58,7 +59,7 @@ export class AuthService {
   }
 
   signIn(authData: SignInAuthData) {
-    this.afAuth.auth
+    return this.afAuth.auth
       .signInWithEmailAndPassword(authData.email, authData.password)
       .catch(error => this.uiService.showSnackBar(error.message));
   }
@@ -73,7 +74,7 @@ export class AuthService {
 
   googleSignIn() {
     const provider = new auth.GoogleAuthProvider();
-    this.afAuth.auth
+    return this.afAuth.auth
       .signInWithPopup(provider)
       .then(credential => this.updateUserData(credential.user))
       .catch(error => this.uiService.showSnackBar(error.message));

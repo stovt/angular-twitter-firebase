@@ -10,6 +10,7 @@ import { AuthService } from '../auth.service';
 })
 export class SigninComponent implements OnInit {
   signInForm: FormGroup;
+  isLoading = false;
 
   constructor(private authService: AuthService) {}
 
@@ -21,6 +22,7 @@ export class SigninComponent implements OnInit {
   }
 
   onSubmit({ email, password }: { email: string; password: string }) {
-    this.authService.signIn({ email, password });
+    this.isLoading = true;
+    this.authService.signIn({ email, password }).then(() => (this.isLoading = false));
   }
 }
