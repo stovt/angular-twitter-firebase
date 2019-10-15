@@ -1,0 +1,9 @@
+<mat-nav-list>
+  <h3 mat-subheader>Users</h3>
+  <a *ngFor="let user of users$ | async" mat-list-item [routerLink]="['/users', user.userId]">
+    <img *ngIf="user.photoURL" matListAvatar [src]="user.photoURL" [alt]="user.displayName" />
+    <mat-icon *ngIf="!user.photoURL" mat-list-icon>person</mat-icon>
+    <h3 matLine>{{ user.displayName }}</h3>
+    <p matLine>{{ user.email }}</p>
+  </a>
+</mat-nav-list>

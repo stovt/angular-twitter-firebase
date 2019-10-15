@@ -93,10 +93,21 @@ export class AuthService {
     const data: User = {
       userId: user.uid,
       email: user.email,
-      displayName: user.displayName
+      displayName: user.displayName,
+      photoURL: user.photoURL
     };
 
     userRef.set(data, { merge: true }).catch(error => this.uiService.showSnackBar(error.message));
+  }
+
+  fetchUsers() {
+    return this.afs
+      .collection<User>('users')
+      .valueChanges()
+      .subscribe(
+        users => this.store.dispatch(new Auth.SetUsers(users)),
+        () => this.uiService.showSnackBar('Fetching users failed, please try anain later')
+      );
   }
 
   private socialSignIn(

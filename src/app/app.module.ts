@@ -15,9 +15,16 @@ import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 import { reducers } from './app.reducer';
+import { UsersComponent } from './users/users.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, HeaderComponent, SidenavListComponent],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    HeaderComponent,
+    SidenavListComponent,
+    UsersComponent
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

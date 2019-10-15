@@ -18,3 +18,7 @@ export const getUser = createSelector(
   getAuthState,
   fromAuth.getUser
 );
+export const getUsers = createSelector(
+  getAuthState,
+  fromAuth.getUsers
+);
