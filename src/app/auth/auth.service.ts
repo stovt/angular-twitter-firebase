@@ -39,7 +39,7 @@ export class AuthService {
         if (user) {
           this.store.dispatch(new Auth.SetUser(user));
           this.store.dispatch(new Auth.SetAuthenticated());
-          this.router.navigate(['/']);
+          // this.router.navigate(['/']); TODO: remove this line
         } else {
           this.store.dispatch(new Auth.SetUnauthenticated());
           this.router.navigate(['/signin']);

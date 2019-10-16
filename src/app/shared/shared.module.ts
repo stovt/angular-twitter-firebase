@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from '../material.module';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { TweetComponent } from './tweet/tweet.component';
+import { TweetFormComponent } from './tweet-form/tweet-form.component';
 
 @NgModule({
   imports: [CommonModule, RouterModule, ReactiveFormsModule, MaterialModule, FlexLayoutModule],
@@ -17,8 +18,9 @@ import { TweetComponent } from './tweet/tweet.component';
     MaterialModule,
     FlexLayoutModule,
     LoadingSpinnerComponent,
-    TweetComponent
+    TweetComponent,
+    TweetFormComponent
   ],
-  declarations: [LoadingSpinnerComponent, TweetComponent]
+  declarations: [LoadingSpinnerComponent, TweetComponent, TweetFormComponent]
 })
 export class SharedModule {}

@@ -1,8 +1,0 @@
-diff a/src/app/shared/tweet/tweet.component.ts b/src/app/shared/tweet/tweet.component.ts	(rejected hunks)
-@@ -10,5 +11 @@ export class TweetComponent implements OnInit {
--  constructor() { }
--
--  ngOnInit() {
--  }
--
-+  ngOnInit() {}

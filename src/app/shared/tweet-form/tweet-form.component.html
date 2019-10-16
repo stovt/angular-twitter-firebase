@@ -1,0 +1,27 @@
+<section class="tweet-form" fxLayout fxLayoutAlign="center">
+  <form
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    [formGroup]="tweetForm"
+    (ngSubmit)="onSubmit(tweetForm.value)"
+    fxFlex.lt-md="100%"
+    fxFlex="800px"
+  >
+    <mat-form-field>
+      <textarea matInput rows="2" placeholder="What's happening?" formControlName="body"></textarea>
+      <mat-hint>Please enter your message.</mat-hint>
+      <mat-error>Missing message.</mat-error>
+    </mat-form-field>
+    <button
+      fxFlexAlign="flex-end"
+      *ngIf="!isLoading"
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="tweetForm.invalid"
+    >
+      Tweet
+    </button>
+    <mat-spinner *ngIf="isLoading" diameter="44"></mat-spinner>
+  </form>
+</section>
