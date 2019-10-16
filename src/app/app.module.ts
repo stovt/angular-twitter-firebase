@@ -15,6 +15,7 @@ import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 import { UsersComponent } from './users/users.component';
 import { reducers } from './app.reducer';
+import { TweetsComponent } from './tweets/tweets.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { reducers } from './app.reducer';
     HomeComponent,
     HeaderComponent,
     SidenavListComponent,
-    UsersComponent
+    UsersComponent,
+    TweetsComponent
   ],
   imports: [
     BrowserModule,

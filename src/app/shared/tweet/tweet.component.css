@@ -1,0 +1,32 @@
+.tweet {
+  margin: 16px;
+}
+
+.mat-card-avatar {
+  margin-bottom: 16px;
+}
+
+.mat-card-title {
+  color: rgba(0, 0, 0, 0.87);
+  text-decoration: none;
+}
+
+.tweet-date {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.like-icon,
+.remove-icon,
+.comment-icon {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.liked-icon,
+.like-icon:hover,
+.remove-icon:hover {
+  color: red;
+}
+
+.comment-icon:hover {
+  color: blue;
+}

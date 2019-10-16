@@ -1,0 +1,41 @@
+<section class="tweet" fxLayout fxLayoutAlign="center">
+  <mat-card fxFlex.lt-md="100%" fxFlex="800px">
+    <mat-card-header fxLayoutAlign="flex-start center">
+      <a routerLink="/users" mat-card-avatar>
+        <img
+          mat-card-avatar
+          src="https://lh3.googleusercontent.com/a-/AAuE7mBnpLtt7nE5yqXb2Mo4S2ickHo7J9Nz5vz_w__2"
+        />
+      </a>
+      <a routerLink="/users" mat-card-title>Sergey Tovt</a>
+      <mat-card-subtitle>seratovt@gmail.com</mat-card-subtitle>
+      <div class="tweet-date" fxFlex="grow" fxFlexAlign="flex-start" fxLayoutAlign="flex-end">
+        Yesterday
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        Fugiat ut et occaecat in ad in duis magna reprehenderit. Veniam nisi Lorem tempor minim eu
+        laborum do esse voluptate. Consectetur voluptate magna voluptate veniam fugiat sunt amet
+        aliquip ad.
+      </p>
+    </mat-card-content>
+    <mat-card-actions fxLayoutAlign="space-between">
+      <button mat-icon-button>
+        <mat-icon class="like-icon">favorite_border</mat-icon>
+        <span> 1</span>
+      </button>
+      <button mat-icon-button>
+        <mat-icon class="liked-icon">favorite</mat-icon>
+        <span> 1</span>
+      </button>
+      <button mat-icon-button>
+        <mat-icon class="remove-icon">delete_outline</mat-icon>
+      </button>
+      <button mat-icon-button>
+        <mat-icon class="comment-icon">comment</mat-icon>
+        <span> 1</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</section>
