@@ -10,8 +10,9 @@ import { switchMap } from 'rxjs/operators';
 import { User } from './user.model';
 import { SignInAuthData, SignUpAuthData } from './auth-data.model';
 import { UIService } from '../shared/ui.service';
-import * as fromRoot from '../app.reducer';
+import * as UI from '../shared/ui.actions';
 import * as Auth from './auth.actions';
+import * as fromRoot from '../app.reducer';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -101,12 +102,19 @@ export class AuthService {
   }
 
   fetchUsers() {
+    this.store.dispatch(new UI.StartLoadingUsers());
     return this.afs
       .collection<User>('users')
       .valueChanges()
       .subscribe(
-        users => this.store.dispatch(new Auth.SetUsers(users)),
-        () => this.uiService.showSnackBar('Fetching users failed, please try anain later')
+        users => {
+          this.store.dispatch(new UI.StopLoadingUsers());
+          this.store.dispatch(new Auth.SetUsers(users));
+        },
+        () => {
+          this.store.dispatch(new UI.StopLoadingUsers());
+          this.uiService.showSnackBar('Fetching users failed, please try anain later');
+        }
       );
   }
 
