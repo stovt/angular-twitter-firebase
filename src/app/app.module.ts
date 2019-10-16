@@ -10,12 +10,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
-import { UsersComponent } from './users/users.component';
+import { HomeComponent } from './pages/home/home.component';
+import { UsersComponent } from './pages/users/users.component';
+import { TweetsComponent } from './pages/tweets/tweets.component';
 import { reducers } from './app.reducer';
-import { TweetsComponent } from './tweets/tweets.component';
 
 @NgModule({
   declarations: [

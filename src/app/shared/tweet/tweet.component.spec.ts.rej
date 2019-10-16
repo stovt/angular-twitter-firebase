@@ -1,0 +1,7 @@
+diff a/src/app/shared/tweet/tweet.component.spec.ts b/src/app/shared/tweet/tweet.component.spec.ts	(rejected hunks)
+@@ -11,3 +11,2 @@ describe('TweetComponent', () => {
+-      declarations: [ TweetComponent ]
+-    })
+-    .compileComponents();
++      declarations: [TweetComponent]
++    }).compileComponents();

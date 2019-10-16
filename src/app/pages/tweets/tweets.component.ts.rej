@@ -1,0 +1,7 @@
+diff a/src/app/tweets/tweets.component.ts b/src/app/tweets/tweets.component.ts	(rejected hunks)
+@@ -13,4 +13 @@ export class TweetsComponent implements OnInit {
+-  constructor() { }
+-
+-  ngOnInit() {
+-  }
++  constructor() {}

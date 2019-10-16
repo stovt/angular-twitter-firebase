@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 
-import { User } from '../auth/user.model';
-import * as fromRoot from '../app.reducer';
-import { AuthService } from '../auth/auth.service';
+import { User } from '../../auth/user.model';
+import * as fromRoot from '../../app.reducer';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-users',

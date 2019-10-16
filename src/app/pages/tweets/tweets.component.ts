@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Tweet } from '../tweet.model';
+import { Tweet } from '../../tweet/tweet.model';
 
 @Component({
   selector: 'app-tweets',
