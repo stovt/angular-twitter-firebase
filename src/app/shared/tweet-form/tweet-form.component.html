@@ -13,8 +13,8 @@
       <mat-error>Missing message.</mat-error>
     </mat-form-field>
     <button
+      *ngIf="(isLoading$ | async) === false"
       fxFlexAlign="flex-end"
-      *ngIf="!isLoading"
       type="submit"
       mat-raised-button
       color="primary"
@@ -22,6 +22,6 @@
     >
       Tweet
     </button>
-    <mat-spinner *ngIf="isLoading" diameter="44"></mat-spinner>
+    <mat-spinner *ngIf="isLoading$ | async" diameter="36" fxFlexAlign="flex-end"></mat-spinner>
   </form>
 </section>

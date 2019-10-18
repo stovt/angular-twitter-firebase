@@ -18,6 +18,10 @@ export const getIsUsersLoading = createSelector(
   getUiState,
   fromUi.getIsUsersLoading
 );
+export const getIsTweetLoading = createSelector(
+  getUiState,
+  fromUi.getIsTweetLoading
+);
 
 export const getAuthState = createFeatureSelector<fromAuth.State>('auth');
 export const getIsAuth = createSelector(
