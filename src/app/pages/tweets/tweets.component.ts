@@ -1,6 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 import { Tweet } from '../../tweet/tweet.model';
+import * as fromRoot from '../../app.reducer';
+import { TweetService } from '../../tweet/tweet.service';
 
 @Component({
   selector: 'app-tweets',
@@ -8,9 +12,18 @@ import { Tweet } from '../../tweet/tweet.model';
   styleUrls: ['./tweets.component.css']
 })
 export class TweetsComponent implements OnInit {
-  @Input() tweet: Tweet;
+  isLoading$: Observable<boolean>;
+  tweets: Tweet[];
 
-  constructor() {}
+  constructor(private store: Store<fromRoot.State>, private tweetService: TweetService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.isLoading$ = this.store.select(fromRoot.getIsAllTweetsLoading);
+    this.store.select(fromRoot.getAllTweets).subscribe(tweets => {
+      this.tweets = tweets;
+      if (!tweets.length) {
+        this.tweetService.fetchAllTweets();
+      }
+    });
+  }
 }

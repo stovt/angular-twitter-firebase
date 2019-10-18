@@ -2,17 +2,21 @@ import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/s
 
 import * as fromUi from './shared/ui.reducer';
 import * as fromAuth from './auth/auth.reducer';
+import * as fromTweet from './tweet/tweet.reducer';
 
 export interface State {
   ui: fromUi.State;
   auth: fromAuth.State;
+  tweet: fromTweet.State;
 }
 
 export const reducers: ActionReducerMap<State> = {
   ui: fromUi.uiReducer,
-  auth: fromAuth.authReducer
+  auth: fromAuth.authReducer,
+  tweet: fromTweet.tweetReducer
 };
 
+/* UI reducer */
 export const getUiState = createFeatureSelector<fromUi.State>('ui');
 export const getIsUsersLoading = createSelector(
   getUiState,
@@ -22,7 +26,12 @@ export const getIsTweetLoading = createSelector(
   getUiState,
   fromUi.getIsTweetLoading
 );
+export const getIsAllTweetsLoading = createSelector(
+  getUiState,
+  fromUi.getIsAllTweetsLoading
+);
 
+/* Auth reducer */
 export const getAuthState = createFeatureSelector<fromAuth.State>('auth');
 export const getIsAuth = createSelector(
   getAuthState,
@@ -35,4 +44,11 @@ export const getUser = createSelector(
 export const getUsers = createSelector(
   getAuthState,
   fromAuth.getUsers
+);
+
+/* Tweet reducer */
+export const getTweetState = createFeatureSelector<fromTweet.State>('tweet');
+export const getAllTweets = createSelector(
+  getTweetState,
+  fromTweet.getAllTweets
 );

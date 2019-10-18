@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import * as fromRoot from '../../app.reducer';
-import { TweetService } from '../../tweet/tweet.servise';
+import { TweetService } from '../../tweet/tweet.service';
 
 @Component({
   selector: 'app-tweet-form',

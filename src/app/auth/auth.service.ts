@@ -10,6 +10,7 @@ import { switchMap } from 'rxjs/operators';
 import { User } from './user.model';
 import { SignInAuthData, SignUpAuthData } from './auth-data.model';
 import { UIService } from '../shared/ui.service';
+import { TweetService } from '../tweet/tweet.service';
 import * as UI from '../shared/ui.actions';
 import * as Auth from './auth.actions';
 import * as fromRoot from '../app.reducer';
@@ -21,6 +22,7 @@ export class AuthService {
     private afs: AngularFirestore,
     private router: Router,
     private uiService: UIService,
+    private tweetService: TweetService,
     private store: Store<fromRoot.State>
   ) {}
 
@@ -83,7 +85,10 @@ export class AuthService {
   signOut() {
     this.afAuth.auth
       .signOut()
-      .then(() => this.router.navigate(['/']))
+      .then(() => {
+        this.tweetService.cancelSubscriptions();
+        this.router.navigate(['/']);
+      })
       .catch(error => this.uiService.showSnackBar(error.message));
   }
 
