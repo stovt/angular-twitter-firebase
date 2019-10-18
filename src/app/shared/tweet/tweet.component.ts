@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { formatDistanceToNow } from 'date-fns';
 
 import { Tweet } from '../../tweet/tweet.model';
 
@@ -13,4 +14,9 @@ export class TweetComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  get date() {
+    console.log(this.tweet.createdAt);
+    return formatDistanceToNow(this.tweet.createdAt.toDate());
+  }
 }

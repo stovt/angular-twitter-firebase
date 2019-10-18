@@ -82,6 +82,44 @@ export class TweetService {
     );
   }
 
+  /*
+  fetchUserTweets(userId: string) {
+    this.store.dispatch(new UI.StartLoadingAllTweets());
+    this.fbSubs.push(
+      this.db
+        .collection<Tweet>('tweets', ref =>
+          ref.where('parentId', '==', null).where('user.userId', '==', userId).orderBy('createdAt', 'desc')
+        )
+        .snapshotChanges()
+        .pipe(
+          map(docArray => {
+            return docArray.map(doc => ({
+              id: doc.payload.doc.id,
+              body: doc.payload.doc.data().body,
+              createdAt: doc.payload.doc.data().createdAt,
+              user: doc.payload.doc.data().user,
+              likes: doc.payload.doc.data().likes,
+              childrenAmount: doc.payload.doc.data().childrenAmount,
+              parentId: doc.payload.doc.data().parentId
+            }));
+          })
+        )
+        .subscribe(
+          tweets => {
+          console.log('TCL: TweetService -> fetchUserTweets -> tweets', tweets);
+            this.store.dispatch(new UI.StopLoadingAllTweets());
+            this.store.dispatch(new TweetActions.SetAllTweets(tweets));
+          },
+          (e) => {
+            console.log(e);
+            this.store.dispatch(new UI.StopLoadingAllTweets());
+            this.uiService.showSnackBar('Fetching User failed, please try anain later');
+          }
+        )
+    );
+  }
+  */
+
   cancelSubscriptions() {
     this.fbSubs.forEach(sub => sub.unsubscribe());
   }
