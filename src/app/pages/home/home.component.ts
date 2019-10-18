@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
+import { User } from '../../auth/user.model';
+import * as fromRoot from '../../app.reducer';
 
 @Component({
   selector: 'app-home',
@@ -6,7 +11,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  constructor() {}
+  user$: Observable<User>;
 
-  ngOnInit() {}
+  constructor(private store: Store<fromRoot.State>) {}
+
+  ngOnInit() {
+    this.user$ = this.store.select(fromRoot.getUser);
+  }
 }
