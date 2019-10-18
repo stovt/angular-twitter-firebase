@@ -4,9 +4,12 @@
   </h1>
   <app-tweet-form></app-tweet-form>
 </div>
+
 <div *ngIf="!user">
   <h1 class="mat-h1 page-title">
     <a routerLink="/signin">Sign In</a> or <a routerLink="/signup">Sign Up</a> to post your tweets.
   </h1>
 </div>
+
+<app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
 <app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>

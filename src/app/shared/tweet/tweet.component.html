@@ -4,9 +4,9 @@
       <a [routerLink]="['/users', tweet.user.userId]" mat-card-avatar>
         <img mat-card-avatar [src]="tweet.user.photoURL" />
       </a>
-      <a [routerLink]="['/users', tweet.user.userId]" mat-card-title>{{
-        tweet.user.displayName
-      }}</a>
+      <a [routerLink]="['/users', tweet.user.userId]" mat-card-title>
+        {{ tweet.user.displayName }}
+      </a>
       <mat-card-subtitle>{{ tweet.user.email }}</mat-card-subtitle>
       <div class="tweet-date" fxFlex="1 1 auto" fxFlexAlign="flex-start" fxLayoutAlign="flex-end">
         {{ date }}

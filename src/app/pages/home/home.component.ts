@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
     this.store.select(fromRoot.getUser).subscribe(user => {
       this.user = user;
       if (user) {
-        this.isLoading$ = this.store.select(fromRoot.isTweetsByUserIdLoading(user.userId));
+        this.isLoading$ = this.store.select(fromRoot.getIsTweetsByUserIdLoading(user.userId));
         this.store.select(fromRoot.getUserTweets(user.userId)).subscribe(tweets => {
           this.tweets = tweets;
           if (!tweets.length) {

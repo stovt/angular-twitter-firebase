@@ -1,0 +1,21 @@
+.user-info {
+  margin: 16px;
+}
+
+.mat-card {
+  background-color: #607d8b;
+}
+
+.mat-card-title {
+  text-decoration: none;
+}
+
+.mat-card-subtitle {
+  margin-bottom: 0;
+}
+
+.mat-card,
+.mat-card-title,
+.mat-card-subtitle {
+  color: #fff;
+}

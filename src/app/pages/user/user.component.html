@@ -1,0 +1,17 @@
+<app-loading-spinner *ngIf="isUserLoading$ | async"></app-loading-spinner>
+<section class="user-info" fxLayout fxLayoutAlign="center">
+  <mat-card *ngIf="user" fxFlex.lt-md="100%" fxFlex="800px" color="primary">
+    <mat-card-header fxLayoutAlign="flex-start center">
+      <a [routerLink]="['/users', user.userId]" mat-card-avatar>
+        <img mat-card-avatar [src]="user.photoURL" />
+      </a>
+      <a [routerLink]="['/users', user.userId]" mat-card-title>
+        {{ user.displayName }}
+      </a>
+      <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+</section>
+
+<app-loading-spinner *ngIf="isTweetsLoading$ | async"></app-loading-spinner>
+<app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>

@@ -8,6 +8,8 @@ export const START_LOADING_ALL_TWEETS = '[UI] Start Loading All Tweets';
 export const STOP_LOADING_ALL_TWEETS = '[UI] Stop Loading All Tweets';
 export const START_LOADING_USER_TWEETS = '[UI] Start Loading User Tweets';
 export const STOP_LOADING_USER_TWEETS = '[UI] Stop Loading User Tweets';
+export const START_LOADING_USER = '[UI] Start Loading User';
+export const STOP_LOADING_USER = '[UI] Stop Loading User';
 
 export class StartLoadingUsers implements Action {
   readonly type = START_LOADING_USERS;
@@ -45,6 +47,18 @@ export class StopLoadingUserTweets implements Action {
   constructor(public payload: string) {}
 }
 
+export class StartLoadingUser implements Action {
+  readonly type = START_LOADING_USER;
+
+  constructor(public payload: string) {}
+}
+
+export class StopLoadingUser implements Action {
+  readonly type = STOP_LOADING_USER;
+
+  constructor(public payload: string) {}
+}
+
 export type UIActions =
   | StartLoadingUsers
   | StopLoadingUsers
@@ -53,4 +67,6 @@ export type UIActions =
   | StartLoadingAllTweets
   | StopLoadingAllTweets
   | StartLoadingUserTweets
-  | StopLoadingUserTweets;
+  | StopLoadingUserTweets
+  | StartLoadingUser
+  | StopLoadingUser;

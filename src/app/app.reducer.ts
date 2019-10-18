@@ -30,10 +30,15 @@ export const getIsAllTweetsLoading = createSelector(
   getUiState,
   fromUi.getIsAllTweetsLoading
 );
-export const isTweetsByUserIdLoading = (userId: string) =>
+export const getIsTweetsByUserIdLoading = (userId: string) =>
   createSelector(
     getUiState,
     fromUi.getIsTweetsByUserIdLoading(userId)
+  );
+export const getIsUserLoading = (id: string) =>
+  createSelector(
+    getUiState,
+    fromUi.getIsUserLoading(id)
   );
 
 /* Auth reducer */
@@ -50,6 +55,11 @@ export const getUsers = createSelector(
   getAuthState,
   fromAuth.getUsers
 );
+export const getUserById = (id: string) =>
+  createSelector(
+    getAuthState,
+    fromAuth.getUserById(id)
+  );
 
 /* Tweet reducer */
 export const getTweetState = createFeatureSelector<fromTweet.State>('tweet');

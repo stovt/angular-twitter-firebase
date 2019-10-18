@@ -5,7 +5,7 @@ import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { of, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, concatMap } from 'rxjs/operators';
 
 import { User } from './user.model';
 import { SignInAuthData, SignUpAuthData } from './auth-data.model';
@@ -123,6 +123,26 @@ export class AuthService {
           () => {
             this.store.dispatch(new UI.StopLoadingUsers());
             this.uiService.showSnackBar('Fetching users failed, please try anain later');
+          }
+        )
+    );
+  }
+
+  fetchUser(id: string) {
+    this.store.dispatch(new UI.StartLoadingUser(id));
+    this.fbSubs.push(
+      this.afs
+        .collection<User>('users', ref => ref.where('userId', '==', id))
+        .valueChanges()
+        .pipe(concatMap(u => u))
+        .subscribe(
+          user => {
+            this.store.dispatch(new UI.StopLoadingUser(id));
+            this.store.dispatch(new Auth.SetUserById({ id, user }));
+          },
+          () => {
+            this.store.dispatch(new UI.StopLoadingUser(id));
+            this.uiService.showSnackBar('Fetching User failed, please try anain later');
           }
         )
     );
