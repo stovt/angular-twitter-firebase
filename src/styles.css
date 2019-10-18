@@ -8,6 +8,15 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
+a {
+  color: #3f51b5;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 .page-title {
   text-align: center;
   margin: 16px 0;

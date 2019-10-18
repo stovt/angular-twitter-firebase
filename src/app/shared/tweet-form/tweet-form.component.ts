@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
 
 import * as fromRoot from '../../app.reducer';
 import { TweetService } from '../../tweet/tweet.service';
@@ -12,6 +12,8 @@ import { TweetService } from '../../tweet/tweet.service';
   styleUrls: ['./tweet-form.component.css']
 })
 export class TweetFormComponent implements OnInit {
+  @ViewChild('f', { static: false }) tweetNgForm: NgForm;
+
   isLoading$: Observable<boolean>;
   tweetForm: FormGroup;
 
@@ -25,6 +27,6 @@ export class TweetFormComponent implements OnInit {
   }
 
   onSubmit({ body }: { body: string }) {
-    this.tweetService.tweet(body.replace(/\r?\n/g, '<br/>'));
+    this.tweetService.tweet(body.replace(/\r?\n/g, '<br/>'), () => this.tweetNgForm.resetForm());
   }
 }

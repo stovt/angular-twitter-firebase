@@ -6,6 +6,7 @@
     (ngSubmit)="onSubmit(tweetForm.value)"
     fxFlex.lt-md="100%"
     fxFlex="800px"
+    #f="ngForm"
   >
     <mat-form-field>
       <textarea matInput rows="2" placeholder="What's happening?" formControlName="body"></textarea>

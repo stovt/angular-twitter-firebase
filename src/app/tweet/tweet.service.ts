@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -20,7 +21,7 @@ export class TweetService {
     private store: Store<fromRoot.State>
   ) {}
 
-  tweet(body: string) {
+  tweet(body: string, resetFormCallback: () => void) {
     this.store.dispatch(new UI.StartLoadingTweet());
     this.store
       .select(fromRoot.getUser)
@@ -36,7 +37,10 @@ export class TweetService {
             childrenAmount: 0,
             parentId: null
           })
-          .then(() => this.store.dispatch(new UI.StopLoadingTweet()))
+          .then(() => {
+            resetFormCallback();
+            this.store.dispatch(new UI.StopLoadingTweet());
+          })
           .catch(error => {
             this.store.dispatch(new UI.StopLoadingTweet());
             this.uiService.showSnackBar(error.message);
