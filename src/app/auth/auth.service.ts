@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { User } from './user.model';
@@ -17,6 +17,8 @@ import * as fromRoot from '../app.reducer';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private fbSubs: Subscription[] = [];
+
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
@@ -86,6 +88,7 @@ export class AuthService {
     this.afAuth.auth
       .signOut()
       .then(() => {
+        this.cancelSubscriptions();
         this.tweetService.cancelSubscriptions();
         this.router.navigate(['/']);
       })
@@ -108,19 +111,21 @@ export class AuthService {
 
   fetchUsers() {
     this.store.dispatch(new UI.StartLoadingUsers());
-    return this.afs
-      .collection<User>('users')
-      .valueChanges()
-      .subscribe(
-        users => {
-          this.store.dispatch(new UI.StopLoadingUsers());
-          this.store.dispatch(new Auth.SetUsers(users));
-        },
-        () => {
-          this.store.dispatch(new UI.StopLoadingUsers());
-          this.uiService.showSnackBar('Fetching users failed, please try anain later');
-        }
-      );
+    this.fbSubs.push(
+      this.afs
+        .collection<User>('users')
+        .valueChanges()
+        .subscribe(
+          users => {
+            this.store.dispatch(new UI.StopLoadingUsers());
+            this.store.dispatch(new Auth.SetUsers(users));
+          },
+          () => {
+            this.store.dispatch(new UI.StopLoadingUsers());
+            this.uiService.showSnackBar('Fetching users failed, please try anain later');
+          }
+        )
+    );
   }
 
   private socialSignIn(
@@ -130,5 +135,9 @@ export class AuthService {
       .signInWithPopup(provider)
       .then(credential => this.updateUserData(credential.user))
       .catch(error => this.uiService.showSnackBar(error.message));
+  }
+
+  private cancelSubscriptions() {
+    this.fbSubs.forEach(sub => sub.unsubscribe());
   }
 }
