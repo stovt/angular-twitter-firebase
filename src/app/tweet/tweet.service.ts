@@ -82,13 +82,15 @@ export class TweetService {
     );
   }
 
-  /*
   fetchUserTweets(userId: string) {
-    this.store.dispatch(new UI.StartLoadingAllTweets());
+    this.store.dispatch(new UI.StartLoadingUserTweets(userId));
     this.fbSubs.push(
       this.db
         .collection<Tweet>('tweets', ref =>
-          ref.where('parentId', '==', null).where('user.userId', '==', userId).orderBy('createdAt', 'desc')
+          ref
+            .where('parentId', '==', null)
+            .where('user.userId', '==', userId)
+            .orderBy('createdAt', 'desc')
         )
         .snapshotChanges()
         .pipe(
@@ -106,19 +108,16 @@ export class TweetService {
         )
         .subscribe(
           tweets => {
-          console.log('TCL: TweetService -> fetchUserTweets -> tweets', tweets);
-            this.store.dispatch(new UI.StopLoadingAllTweets());
-            this.store.dispatch(new TweetActions.SetAllTweets(tweets));
+            this.store.dispatch(new UI.StopLoadingUserTweets(userId));
+            this.store.dispatch(new TweetActions.SetUserTweets({ userId, tweets }));
           },
-          (e) => {
-            console.log(e);
-            this.store.dispatch(new UI.StopLoadingAllTweets());
-            this.uiService.showSnackBar('Fetching User failed, please try anain later');
+          () => {
+            this.store.dispatch(new UI.StopLoadingUserTweets(userId));
+            this.uiService.showSnackBar('Fetching User Tweets failed, please try anain later');
           }
         )
     );
   }
-  */
 
   cancelSubscriptions() {
     this.fbSubs.forEach(sub => sub.unsubscribe());

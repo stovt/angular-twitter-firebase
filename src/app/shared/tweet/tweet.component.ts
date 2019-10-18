@@ -16,7 +16,6 @@ export class TweetComponent implements OnInit {
   ngOnInit() {}
 
   get date() {
-    console.log(this.tweet.createdAt);
     return formatDistanceToNow(this.tweet.createdAt.toDate());
   }
 }

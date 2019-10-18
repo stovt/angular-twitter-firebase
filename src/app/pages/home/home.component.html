@@ -1,11 +1,12 @@
-<div *ngIf="user$ | async">
+<div *ngIf="user">
   <h1 class="mat-h1 page-title">
-    Hi, <b>{{ (user$ | async).displayName }}</b>
+    Hi, <b>{{ user.displayName }}</b>
   </h1>
   <app-tweet-form></app-tweet-form>
 </div>
-<div *ngIf="(user$ | async) === null">
+<div *ngIf="!user">
   <h1 class="mat-h1 page-title">
     <a routerLink="/signin">Sign In</a> or <a routerLink="/signup">Sign Up</a> to post your tweets.
   </h1>
 </div>
+<app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>

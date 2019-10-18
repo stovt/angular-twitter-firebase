@@ -5,19 +5,23 @@ import {
   START_LOADING_TWEET,
   STOP_LOADING_TWEET,
   START_LOADING_ALL_TWEETS,
-  STOP_LOADING_ALL_TWEETS
+  STOP_LOADING_ALL_TWEETS,
+  START_LOADING_USER_TWEETS,
+  STOP_LOADING_USER_TWEETS
 } from './ui.actions';
 
 export interface State {
   isUsersLoading: boolean;
   isTweetLoading: boolean;
   isAllTweetsLoading: boolean;
+  isTweetsByUserIdLoading: Record<string, boolean>;
 }
 
 const initialState: State = {
   isUsersLoading: false,
   isTweetLoading: false,
-  isAllTweetsLoading: false
+  isAllTweetsLoading: false,
+  isTweetsByUserIdLoading: {}
 };
 
 export function uiReducer(state = initialState, action: UIActions) {
@@ -52,6 +56,22 @@ export function uiReducer(state = initialState, action: UIActions) {
         ...state,
         isAllTweetsLoading: false
       };
+    case START_LOADING_USER_TWEETS:
+      return {
+        ...state,
+        isTweetsByUserIdLoading: {
+          ...state.isTweetsByUserIdLoading,
+          [action.payload]: true
+        }
+      };
+    case STOP_LOADING_USER_TWEETS:
+      return {
+        ...state,
+        isTweetsByUserIdLoading: {
+          ...state.isTweetsByUserIdLoading,
+          [action.payload]: false
+        }
+      };
     default:
       return state;
   }
@@ -60,3 +80,5 @@ export function uiReducer(state = initialState, action: UIActions) {
 export const getIsUsersLoading = (state: State) => state.isUsersLoading;
 export const getIsTweetLoading = (state: State) => state.isTweetLoading;
 export const getIsAllTweetsLoading = (state: State) => state.isAllTweetsLoading;
+export const getIsTweetsByUserIdLoading = (userId: string) => (state: State) =>
+  state.isTweetsByUserIdLoading[userId] || false;

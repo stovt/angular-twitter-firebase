@@ -3,8 +3,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { Tweet } from '../../tweet/tweet.model';
-import * as fromRoot from '../../app.reducer';
 import { TweetService } from '../../tweet/tweet.service';
+import * as fromRoot from '../../app.reducer';
 
 @Component({
   selector: 'app-tweets',
