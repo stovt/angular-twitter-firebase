@@ -16,20 +16,23 @@
       <p [innerHTML]="tweet.body"></p>
     </mat-card-content>
     <mat-card-actions fxLayoutAlign="space-between">
-      <button *ngIf="!isLiked" mat-icon-button>
+      <div *ngIf="isTweetLiking" fxLayoutAlign="center center">
+        <mat-spinner diameter="24"></mat-spinner>
+      </div>
+      <button *ngIf="!isLiked && !isTweetLiking" mat-icon-button (click)="onLikeTweet()">
         <mat-icon class="like-icon">favorite_border</mat-icon>
         <span> {{ tweet.likes.length }}</span>
       </button>
-      <button *ngIf="isLiked" mat-icon-button>
+      <button *ngIf="isLiked && !isTweetLiking" mat-icon-button (click)="onLikeTweet()">
         <mat-icon class="liked-icon">favorite</mat-icon>
         <span> {{ tweet.likes.length }}</span>
-      </button>
-      <button *ngIf="canRemove && !isTweetRemoving" mat-icon-button (click)="onRemoveTweet()">
-        <mat-icon class="remove-icon">delete_outline</mat-icon>
       </button>
       <div *ngIf="isTweetRemoving" fxLayoutAlign="center center">
         <mat-spinner diameter="24"></mat-spinner>
       </div>
+      <button *ngIf="canRemove && !isTweetRemoving" mat-icon-button (click)="onRemoveTweet()">
+        <mat-icon class="remove-icon">delete_outline</mat-icon>
+      </button>
       <button mat-icon-button>
         <mat-icon class="comment-icon">comment</mat-icon>
         <span> {{ tweet.childrenAmount }}</span>

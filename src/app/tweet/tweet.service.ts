@@ -119,6 +119,13 @@ export class TweetService {
     );
   }
 
+  likeTweet(id: string, likes: string[]) {
+    return this.db
+      .doc<Tweet>(`tweets/${id}`)
+      .update({ likes })
+      .catch(e => this.uiService.showSnackBar(e.message));
+  }
+
   removeTweet(id: string) {
     return this.db
       .doc<Tweet>(`tweets/${id}`)
