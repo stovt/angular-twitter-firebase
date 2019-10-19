@@ -5,7 +5,7 @@ import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { of, Subscription } from 'rxjs';
-import { switchMap, concatMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 import { User } from './user.model';
 import { SignInAuthData, SignUpAuthData } from './auth-data.model';
@@ -43,7 +43,7 @@ export class AuthService {
         if (user) {
           this.store.dispatch(new Auth.SetUser(user));
           this.store.dispatch(new Auth.SetAuthenticated());
-          // this.router.navigate(['/']); TODO: remove this line
+          this.router.navigate(['/']);
         } else {
           this.store.dispatch(new Auth.SetUnauthenticated());
           this.router.navigate(['/signin']);
@@ -132,9 +132,8 @@ export class AuthService {
     this.store.dispatch(new UI.StartLoadingUser(id));
     this.fbSubs.push(
       this.afs
-        .collection<User>('users', ref => ref.where('userId', '==', id))
+        .doc<User>(`users/${id}`)
         .valueChanges()
-        .pipe(concatMap(u => u))
         .subscribe(
           user => {
             this.store.dispatch(new UI.StopLoadingUser(id));
