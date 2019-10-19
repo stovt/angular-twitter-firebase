@@ -24,9 +24,12 @@
         <mat-icon class="liked-icon">favorite</mat-icon>
         <span> {{ tweet.likes.length }}</span>
       </button>
-      <button *ngIf="canRemove" mat-icon-button>
+      <button *ngIf="canRemove && !isTweetRemoving" mat-icon-button (click)="onRemoveTweet()">
         <mat-icon class="remove-icon">delete_outline</mat-icon>
       </button>
+      <div *ngIf="isTweetRemoving" fxLayoutAlign="center center">
+        <mat-spinner diameter="24"></mat-spinner>
+      </div>
       <button mat-icon-button>
         <mat-icon class="comment-icon">comment</mat-icon>
         <span> {{ tweet.childrenAmount }}</span>

@@ -3,6 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Store } from '@ngrx/store';
 
 import { Tweet } from '../../tweet/tweet.model';
+import { TweetService } from 'src/app/tweet/tweet.service';
 import * as fromRoot from '../../app.reducer';
 
 @Component({
@@ -16,7 +17,9 @@ export class TweetComponent implements OnInit {
   isLiked = false;
   canRemove = false;
 
-  constructor(private store: Store<fromRoot.State>) {}
+  isTweetRemoving = false;
+
+  constructor(private store: Store<fromRoot.State>, private tweetService: TweetService) {}
 
   ngOnInit() {
     this.store.select(fromRoot.getUser).subscribe(user => {
@@ -25,6 +28,14 @@ export class TweetComponent implements OnInit {
         this.canRemove = user.userId === this.tweet.user.userId;
       }
     });
+  }
+
+  onRemoveTweet() {
+    this.isTweetRemoving = true;
+    this.tweetService
+      .removeTweet(this.tweet.id)
+      .then(() => (this.isTweetRemoving = false))
+      .catch(() => (this.isTweetRemoving = false));
   }
 
   get date() {

@@ -119,6 +119,13 @@ export class TweetService {
     );
   }
 
+  removeTweet(id: string) {
+    return this.db
+      .doc<Tweet>(`tweets/${id}`)
+      .delete()
+      .catch(e => this.uiService.showSnackBar(e.message));
+  }
+
   cancelSubscriptions() {
     this.fbSubs.forEach(sub => sub.unsubscribe());
   }
