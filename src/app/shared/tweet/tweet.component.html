@@ -16,15 +16,15 @@
       <p [innerHTML]="tweet.body"></p>
     </mat-card-content>
     <mat-card-actions fxLayoutAlign="space-between">
-      <button mat-icon-button>
+      <button *ngIf="!isLiked" mat-icon-button>
         <mat-icon class="like-icon">favorite_border</mat-icon>
         <span> {{ tweet.likes.length }}</span>
       </button>
-      <button mat-icon-button>
+      <button *ngIf="isLiked" mat-icon-button>
         <mat-icon class="liked-icon">favorite</mat-icon>
         <span> {{ tweet.likes.length }}</span>
       </button>
-      <button mat-icon-button>
+      <button *ngIf="canRemove" mat-icon-button>
         <mat-icon class="remove-icon">delete_outline</mat-icon>
       </button>
       <button mat-icon-button>

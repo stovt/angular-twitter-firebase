@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { formatDistanceToNow } from 'date-fns';
+import { Store } from '@ngrx/store';
 
 import { Tweet } from '../../tweet/tweet.model';
+import * as fromRoot from '../../app.reducer';
 
 @Component({
   selector: 'app-tweet',
@@ -11,9 +13,19 @@ import { Tweet } from '../../tweet/tweet.model';
 export class TweetComponent implements OnInit {
   @Input() tweet: Tweet;
 
-  constructor() {}
+  isLiked = false;
+  canRemove = false;
 
-  ngOnInit() {}
+  constructor(private store: Store<fromRoot.State>) {}
+
+  ngOnInit() {
+    this.store.select(fromRoot.getUser).subscribe(user => {
+      if (user) {
+        this.isLiked = this.tweet.likes.indexOf(user.userId) !== -1;
+        this.canRemove = user.userId === this.tweet.user.userId;
+      }
+    });
+  }
 
   get date() {
     return formatDistanceToNow(this.tweet.createdAt.toDate());
