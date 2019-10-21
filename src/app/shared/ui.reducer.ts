@@ -9,12 +9,18 @@ import {
   START_LOADING_USER_TWEETS,
   STOP_LOADING_USER_TWEETS,
   START_LOADING_USER,
-  STOP_LOADING_USER
+  STOP_LOADING_USER,
+  START_LOADING_COMMENT,
+  STOP_LOADING_COMMENT,
+  START_LOADING_COMMENTS,
+  STOP_LOADING_COMMENTS
 } from './ui.actions';
 
 export interface State {
   isUsersLoading: boolean;
   isTweetLoading: boolean;
+  isCommentByTweetIdLoading: Record<string, boolean>;
+  isCommentsByTweetIdLoading: Record<string, boolean>;
   isAllTweetsLoading: boolean;
   isTweetsByUserIdLoading: Record<string, boolean>;
   isUserLoading: Record<string, boolean>;
@@ -23,6 +29,8 @@ export interface State {
 const initialState: State = {
   isUsersLoading: false,
   isTweetLoading: false,
+  isCommentByTweetIdLoading: {},
+  isCommentsByTweetIdLoading: {},
   isAllTweetsLoading: false,
   isTweetsByUserIdLoading: {},
   isUserLoading: {}
@@ -92,6 +100,38 @@ export function uiReducer(state = initialState, action: UIActions) {
           [action.payload]: false
         }
       };
+    case START_LOADING_COMMENT:
+      return {
+        ...state,
+        isUserLoading: {
+          ...state.isCommentByTweetIdLoading,
+          [action.payload]: true
+        }
+      };
+    case STOP_LOADING_COMMENT:
+      return {
+        ...state,
+        isUserLoading: {
+          ...state.isCommentByTweetIdLoading,
+          [action.payload]: false
+        }
+      };
+    case START_LOADING_COMMENTS:
+      return {
+        ...state,
+        isUserLoading: {
+          ...state.isCommentsByTweetIdLoading,
+          [action.payload]: true
+        }
+      };
+    case STOP_LOADING_COMMENTS:
+      return {
+        ...state,
+        isUserLoading: {
+          ...state.isCommentsByTweetIdLoading,
+          [action.payload]: false
+        }
+      };
     default:
       return state;
   }
@@ -103,3 +143,7 @@ export const getIsAllTweetsLoading = (state: State) => state.isAllTweetsLoading;
 export const getIsTweetsByUserIdLoading = (userId: string) => (state: State) =>
   state.isTweetsByUserIdLoading[userId] || false;
 export const getIsUserLoading = (id: string) => (state: State) => state.isUserLoading[id] || false;
+export const getIsCommentByTweetIdLoading = (tweetId: string) => (state: State) =>
+  state.isCommentByTweetIdLoading[tweetId] || false;
+export const getIsCommentsByTweetIdLoading = (tweetId: string) => (state: State) =>
+  state.isCommentsByTweetIdLoading[tweetId] || false;

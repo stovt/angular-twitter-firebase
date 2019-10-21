@@ -1,15 +1,23 @@
-import { TweetActions, SET_ALL_TWEETS, SET_USER_TWEETS, RESET } from './tweet.actions';
+import {
+  TweetActions,
+  SET_ALL_TWEETS,
+  SET_USER_TWEETS,
+  SET_TWEET_COMMENTS,
+  RESET
+} from './tweet.actions';
 
 import { Tweet } from './tweet.model';
 
 export interface State {
   allTweets: Tweet[];
   tweetsByUserId: Record<string, Tweet[]>;
+  commentsByTweetId: Record<string, Tweet[]>;
 }
 
 const initialState: State = {
   allTweets: [],
-  tweetsByUserId: {}
+  tweetsByUserId: {},
+  commentsByTweetId: {}
 };
 
 export function tweetReducer(state = initialState, action: TweetActions) {
@@ -27,6 +35,14 @@ export function tweetReducer(state = initialState, action: TweetActions) {
           [action.payload.userId]: action.payload.tweets
         }
       };
+    case SET_TWEET_COMMENTS:
+      return {
+        ...state,
+        commentsByTweetId: {
+          ...state.commentsByTweetId,
+          [action.payload.tweetId]: action.payload.comments
+        }
+      };
     case RESET:
       return initialState;
     default:
@@ -37,3 +53,5 @@ export function tweetReducer(state = initialState, action: TweetActions) {
 export const getAllTweets = (state: State) => state.allTweets;
 export const getUserTweets = (userId: string) => (state: State) =>
   state.tweetsByUserId[userId] || [];
+export const getTweetComments = (tweetId: string) => (state: State) =>
+  state.commentsByTweetId[tweetId] || [];

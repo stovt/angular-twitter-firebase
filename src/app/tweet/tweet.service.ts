@@ -48,6 +48,33 @@ export class TweetService {
       });
   }
 
+  commentTweet(parentId: string, body: string, resetFormCallback: () => void) {
+    this.store.dispatch(new UI.StartLoadingComment(parentId));
+    this.store
+      .select(fromRoot.getUser)
+      .pipe(take(1))
+      .subscribe(user => {
+        this.db
+          .collection('tweets')
+          .add({
+            body,
+            createdAt: new Date(),
+            user,
+            likes: [],
+            childrenAmount: 0,
+            parentId
+          })
+          .then(() => {
+            resetFormCallback();
+            this.store.dispatch(new UI.StopLoadingComment(parentId));
+          })
+          .catch(error => {
+            this.store.dispatch(new UI.StopLoadingComment(parentId));
+            this.uiService.showSnackBar(error.message);
+          });
+      });
+  }
+
   fetchAllTweets() {
     this.store.dispatch(new UI.StartLoadingAllTweets());
     this.fbSubs.push(
@@ -74,9 +101,9 @@ export class TweetService {
             this.store.dispatch(new UI.StopLoadingAllTweets());
             this.store.dispatch(new TweetActions.SetAllTweets(tweets));
           },
-          () => {
+          error => {
             this.store.dispatch(new UI.StopLoadingAllTweets());
-            this.uiService.showSnackBar('Fetching Tweets failed, please try anain later');
+            this.uiService.showSnackBar(error.message);
           }
         )
     );
@@ -111,9 +138,43 @@ export class TweetService {
             this.store.dispatch(new UI.StopLoadingUserTweets(userId));
             this.store.dispatch(new TweetActions.SetUserTweets({ userId, tweets }));
           },
-          () => {
+          error => {
             this.store.dispatch(new UI.StopLoadingUserTweets(userId));
-            this.uiService.showSnackBar('Fetching User Tweets failed, please try anain later');
+            this.uiService.showSnackBar(error.message);
+          }
+        )
+    );
+  }
+
+  fetchTweetComments(tweetId: string) {
+    this.store.dispatch(new UI.StartLoadingComments(tweetId));
+    this.fbSubs.push(
+      this.db
+        .collection<Tweet>('tweets', ref =>
+          ref.where('parentId', '==', tweetId).orderBy('createdAt', 'desc')
+        )
+        .snapshotChanges()
+        .pipe(
+          map(docArray => {
+            return docArray.map(doc => ({
+              id: doc.payload.doc.id,
+              body: doc.payload.doc.data().body,
+              createdAt: doc.payload.doc.data().createdAt,
+              user: doc.payload.doc.data().user,
+              likes: doc.payload.doc.data().likes,
+              childrenAmount: doc.payload.doc.data().childrenAmount,
+              parentId: doc.payload.doc.data().parentId
+            }));
+          })
+        )
+        .subscribe(
+          comments => {
+            this.store.dispatch(new UI.StopLoadingComments(tweetId));
+            this.store.dispatch(new TweetActions.SetTweetComments({ tweetId, comments }));
+          },
+          error => {
+            this.store.dispatch(new UI.StopLoadingComments(tweetId));
+            this.uiService.showSnackBar(error.message);
           }
         )
     );
