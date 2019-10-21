@@ -20,10 +20,19 @@ service cloud.firestore {
           && (
             (
               request.auth.uid in request.resource.data.likes
-              && request.resource.data.likes.size() == resource.data.likes.size() + 1
+              && (
+                resource.data.likes.size() == 0
+                && request.resource.data.likes == [request.auth.uid]
+                )
+              || (
+                resource.data.likes.size() > 0
+                && request.resource.data.likes
+                  == (resource.data.likes.join(',') + ',' + request.auth.uid).split(',')
+              )
             ) || (
               !(request.auth.uid in request.resource.data.likes)
-              && request.resource.data.likes.size() == resource.data.likes.size() - 1
+              && request.resource.data.likes
+                == resource.data.likes.join(',').split(request.auth.uid).join('').split(',')
             )
           )
         )
