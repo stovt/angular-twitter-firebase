@@ -23,10 +23,11 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.isLoading$ = this.store.select(fromRoot.getIsUsersLoading);
     this.usersSub = this.store.select(fromRoot.getUsers).subscribe(users => {
       this.users = users;
-      if (!users.length) {
-        this.authService.fetchUsers();
-      }
     });
+
+    if (!this.users.length) {
+      this.authService.fetchUsers();
+    }
   }
 
   ngOnDestroy() {
