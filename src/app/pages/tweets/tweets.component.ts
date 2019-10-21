@@ -19,11 +19,9 @@ export class TweetsComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading$ = this.store.select(fromRoot.getIsAllTweetsLoading);
-    this.store.select(fromRoot.getAllTweets).subscribe(tweets => {
-      this.tweets = tweets;
-      if (!tweets.length) {
-        this.tweetService.fetchAllTweets();
-      }
-    });
+    this.store.select(fromRoot.getAllTweets).subscribe(tweets => (this.tweets = tweets));
+    if (!this.tweets.length) {
+      this.tweetService.fetchAllTweets();
+    }
   }
 }

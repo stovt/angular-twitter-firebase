@@ -24,12 +24,12 @@ export class HomeComponent implements OnInit {
       this.user = user;
       if (user) {
         this.isLoading$ = this.store.select(fromRoot.getIsTweetsByUserIdLoading(user.userId));
-        this.store.select(fromRoot.getUserTweets(user.userId)).subscribe(tweets => {
-          this.tweets = tweets;
-          if (!tweets.length) {
-            this.tweetService.fetchUserTweets(user.userId);
-          }
-        });
+        this.store
+          .select(fromRoot.getUserTweets(user.userId))
+          .subscribe(tweets => (this.tweets = tweets));
+        if (!this.tweets.length) {
+          this.tweetService.fetchUserTweets(user.userId);
+        }
       }
     });
   }

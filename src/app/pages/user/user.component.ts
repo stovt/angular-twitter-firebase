@@ -39,11 +39,9 @@ export class UserComponent implements OnInit {
     });
 
     this.isTweetsLoading$ = this.store.select(fromRoot.getIsTweetsByUserIdLoading(userId));
-    this.store.select(fromRoot.getUserTweets(userId)).subscribe(tweets => {
-      this.tweets = tweets;
-      if (!tweets.length) {
-        this.tweetService.fetchUserTweets(userId);
-      }
-    });
+    this.store.select(fromRoot.getUserTweets(userId)).subscribe(tweets => (this.tweets = tweets));
+    if (!this.tweets.length) {
+      this.tweetService.fetchUserTweets(userId);
+    }
   }
 }
