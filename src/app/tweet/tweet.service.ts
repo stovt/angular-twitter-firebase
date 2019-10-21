@@ -8,7 +8,7 @@ import { take, map } from 'rxjs/operators';
 import { Tweet } from './tweet.model';
 import { UIService } from '../shared/ui.service';
 import * as UI from '../shared/ui.actions';
-import * as TweetActions from '../tweet/tweet.actions';
+import * as TweetActions from './tweet.actions';
 import * as fromRoot from '../app.reducer';
 
 @Injectable({ providedIn: 'root' })

@@ -13,6 +13,7 @@ import { UIService } from '../shared/ui.service';
 import { TweetService } from '../tweet/tweet.service';
 import * as UI from '../shared/ui.actions';
 import * as Auth from './auth.actions';
+import * as TweetActions from '../tweet/tweet.actions';
 import * as fromRoot from '../app.reducer';
 
 @Injectable({ providedIn: 'root' })
@@ -45,7 +46,10 @@ export class AuthService {
           this.store.dispatch(new Auth.SetAuthenticated());
           this.router.navigate(['/']);
         } else {
+          this.cancelSubscriptions();
+          this.tweetService.cancelSubscriptions();
           this.store.dispatch(new Auth.SetUnauthenticated());
+          this.store.dispatch(new TweetActions.Reset());
           this.router.navigate(['/signin']);
         }
       });
@@ -85,14 +89,7 @@ export class AuthService {
   }
 
   signOut() {
-    this.afAuth.auth
-      .signOut()
-      .then(() => {
-        this.cancelSubscriptions();
-        this.tweetService.cancelSubscriptions();
-        this.router.navigate(['/']);
-      })
-      .catch(error => this.uiService.showSnackBar(error.message));
+    this.afAuth.auth.signOut().catch(error => this.uiService.showSnackBar(error.message));
   }
 
   updateUserData(user: firebase.User) {

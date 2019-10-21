@@ -1,4 +1,4 @@
-import { TweetActions, SET_ALL_TWEETS, SET_USER_TWEETS } from './tweet.actions';
+import { TweetActions, SET_ALL_TWEETS, SET_USER_TWEETS, RESET } from './tweet.actions';
 
 import { Tweet } from './tweet.model';
 
@@ -27,6 +27,8 @@ export function tweetReducer(state = initialState, action: TweetActions) {
           [action.payload.userId]: action.payload.tweets
         }
       };
+    case RESET:
+      return initialState;
     default:
       return state;
   }
