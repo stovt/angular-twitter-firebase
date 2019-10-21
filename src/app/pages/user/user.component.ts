@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { User } from '../../auth/user.model';
 import { Tweet } from '../../tweet/tweet.model';
@@ -14,11 +14,15 @@ import * as fromRoot from '../../app.reducer';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
   user: User;
+  tweets: Tweet[];
+
   isUserLoading$: Observable<boolean>;
   isTweetsLoading$: Observable<boolean>;
-  tweets: Tweet[];
+
+  userSub: Subscription;
+  tweetsSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,7 +35,7 @@ export class UserComponent implements OnInit {
     const userId = this.route.snapshot.paramMap.get('id');
 
     this.isUserLoading$ = this.store.select(fromRoot.getIsUserLoading(userId));
-    this.store.select(fromRoot.getUserById(userId)).subscribe(user => {
+    this.userSub = this.store.select(fromRoot.getUserById(userId)).subscribe(user => {
       this.user = user;
       if (!user) {
         this.authService.fetchUser(userId);
@@ -39,9 +43,20 @@ export class UserComponent implements OnInit {
     });
 
     this.isTweetsLoading$ = this.store.select(fromRoot.getIsTweetsByUserIdLoading(userId));
-    this.store.select(fromRoot.getUserTweets(userId)).subscribe(tweets => (this.tweets = tweets));
+    this.tweetsSub = this.store
+      .select(fromRoot.getUserTweets(userId))
+      .subscribe(tweets => (this.tweets = tweets));
     if (!this.tweets.length) {
       this.tweetService.fetchUserTweets(userId);
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.userSub) {
+      this.userSub.unsubscribe();
+    }
+    if (this.tweetsSub) {
+      this.tweetsSub.unsubscribe();
     }
   }
 }

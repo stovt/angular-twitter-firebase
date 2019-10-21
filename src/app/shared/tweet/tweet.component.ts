@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { formatDistanceToNow } from 'date-fns';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { formatDistanceToNow } from 'date-fns';
 
 import { Tweet } from '../../tweet/tweet.model';
 import { User } from '../../auth/user.model';
@@ -12,13 +13,15 @@ import * as fromRoot from '../../app.reducer';
   templateUrl: './tweet.component.html',
   styleUrls: ['./tweet.component.css']
 })
-export class TweetComponent implements OnInit {
+export class TweetComponent implements OnInit, OnDestroy {
   @Input() tweet: Tweet;
 
   user: User;
+  userSub: Subscription;
 
   isLiked = false;
   canRemove = false;
+  showComments = false;
 
   isTweetLiking = false;
   isTweetRemoving = false;
@@ -26,7 +29,7 @@ export class TweetComponent implements OnInit {
   constructor(private store: Store<fromRoot.State>, private tweetService: TweetService) {}
 
   ngOnInit() {
-    this.store.select(fromRoot.getUser).subscribe(user => {
+    this.userSub = this.store.select(fromRoot.getUser).subscribe(user => {
       this.user = user;
       if (user) {
         this.isLiked = this.tweet.likes.indexOf(user.userId) !== -1;
@@ -57,6 +60,16 @@ export class TweetComponent implements OnInit {
       .removeTweet(this.tweet.id)
       .then(() => (this.isTweetRemoving = false))
       .catch(() => (this.isTweetRemoving = false));
+  }
+
+  onToggleComments() {
+    this.showComments = !this.showComments;
+  }
+
+  ngOnDestroy() {
+    if (this.userSub) {
+      this.userSub.unsubscribe();
+    }
   }
 
   get date() {
