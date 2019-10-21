@@ -1,6 +1,9 @@
 .tweet {
   margin: 16px;
 }
+.tweet.with-comments {
+  margin-bottom: 0;
+}
 
 .mat-card-avatar {
   margin-bottom: 16px;

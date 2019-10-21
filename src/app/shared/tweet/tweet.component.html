@@ -1,4 +1,4 @@
-<section class="tweet" fxLayout fxLayoutAlign="center">
+<section class="tweet" [class.with-comments]="showComments" fxLayout fxLayoutAlign="center">
   <mat-card fxFlex.lt-md="100%" fxFlex="800px">
     <mat-card-header fxLayoutAlign="flex-start center">
       <a [routerLink]="['/users', tweet.user.userId]" mat-card-avatar>
@@ -33,10 +33,11 @@
       <button *ngIf="canRemove && !isTweetRemoving" mat-icon-button (click)="onRemoveTweet()">
         <mat-icon class="remove-icon">delete_outline</mat-icon>
       </button>
-      <button mat-icon-button>
+      <button mat-icon-button (click)="onToggleComments()">
         <mat-icon class="comment-icon">comment</mat-icon>
         <span> {{ tweet.childrenAmount }}</span>
       </button>
     </mat-card-actions>
   </mat-card>
 </section>
+<app-tweet-comments *ngIf="showComments" [tweetId]="tweet.id"></app-tweet-comments>

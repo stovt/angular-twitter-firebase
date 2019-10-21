@@ -103,7 +103,7 @@ export function uiReducer(state = initialState, action: UIActions) {
     case START_LOADING_COMMENT:
       return {
         ...state,
-        isUserLoading: {
+        isCommentByTweetIdLoading: {
           ...state.isCommentByTweetIdLoading,
           [action.payload]: true
         }
@@ -111,7 +111,7 @@ export function uiReducer(state = initialState, action: UIActions) {
     case STOP_LOADING_COMMENT:
       return {
         ...state,
-        isUserLoading: {
+        isCommentByTweetIdLoading: {
           ...state.isCommentByTweetIdLoading,
           [action.payload]: false
         }
@@ -119,7 +119,7 @@ export function uiReducer(state = initialState, action: UIActions) {
     case START_LOADING_COMMENTS:
       return {
         ...state,
-        isUserLoading: {
+        isCommentsByTweetIdLoading: {
           ...state.isCommentsByTweetIdLoading,
           [action.payload]: true
         }
@@ -127,7 +127,7 @@ export function uiReducer(state = initialState, action: UIActions) {
     case STOP_LOADING_COMMENTS:
       return {
         ...state,
-        isUserLoading: {
+        isCommentsByTweetIdLoading: {
           ...state.isCommentsByTweetIdLoading,
           [action.payload]: false
         }

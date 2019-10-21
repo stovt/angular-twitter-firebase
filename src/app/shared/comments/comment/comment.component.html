@@ -1,0 +1,20 @@
+<mat-divider vertical></mat-divider>
+<section fxLayout fxLayoutAlign="flex-end">
+  <mat-card fxFlex.lt-md="100%" fxFlex="750px">
+    <mat-card-header fxLayoutAlign="flex-start center">
+      <a [routerLink]="['/users', comment.user.userId]" mat-card-avatar>
+        <img mat-card-avatar [src]="comment.user.photoURL" />
+      </a>
+      <a [routerLink]="['/users', comment.user.userId]" mat-card-title>
+        {{ comment.user.displayName }}
+      </a>
+      <mat-card-subtitle>{{ comment.user.email }}</mat-card-subtitle>
+      <div class="comment-date" fxFlex="1 1 auto" fxFlexAlign="flex-start" fxLayoutAlign="flex-end">
+        {{ date }}
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <p [innerHTML]="comment.body"></p>
+    </mat-card-content>
+  </mat-card>
+</section>

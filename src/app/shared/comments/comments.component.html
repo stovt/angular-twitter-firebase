@@ -1,0 +1,9 @@
+<mat-divider *ngIf="comments.length" vertical></mat-divider>
+<div class="comments">
+  <app-tweet-comment-form [tweetId]="tweetId"></app-tweet-comment-form>
+  <app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
+  <app-tweet-comment
+    *ngFor="let comment of comments; let i = index"
+    [comment]="comment"
+  ></app-tweet-comment>
+</div>
