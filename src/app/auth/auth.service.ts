@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { of, Subscription } from 'rxjs';
+import { of, Subscription, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { User } from './user.model';
@@ -19,6 +19,8 @@ import * as fromRoot from '../app.reducer';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private fbSubs: Subscription[] = [];
+
+  public authChecked = new Subject<boolean>();
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -44,7 +46,6 @@ export class AuthService {
         if (user) {
           this.store.dispatch(new Auth.SetUser(user));
           this.store.dispatch(new Auth.SetAuthenticated());
-          this.router.navigate(['/']);
         } else {
           this.cancelSubscriptions();
           this.tweetService.cancelSubscriptions();
@@ -52,6 +53,7 @@ export class AuthService {
           this.store.dispatch(new TweetActions.Reset());
           this.router.navigate(['/signin']);
         }
+        this.authChecked.next(true);
       });
   }
 

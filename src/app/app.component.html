@@ -1,4 +1,8 @@
-<mat-sidenav-container>
+<div *ngIf="!isAuthChecked" class="spinner-container" fxLayoutAlign="center center">
+  <mat-spinner></mat-spinner>
+</div>
+
+<mat-sidenav-container *ngIf="isAuthChecked">
   <mat-sidenav #sidenav role="navigation">
     <app-sidenav-list (closeSidenav)="sidenav.close()"></app-sidenav-list>
   </mat-sidenav>

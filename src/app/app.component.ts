@@ -8,9 +8,12 @@ import { AuthService } from './auth/auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  isAuthChecked = false;
+
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
     this.authService.initAuthListener();
+    this.authService.authChecked.subscribe(authChecked => (this.isAuthChecked = authChecked));
   }
 }
