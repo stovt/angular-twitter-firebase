@@ -37,6 +37,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  trackTweet(index: number, item: Tweet) {
+    return item ? item.id : undefined;
+  }
+
   ngOnDestroy() {
     if (this.userSub) {
       this.userSub.unsubscribe();

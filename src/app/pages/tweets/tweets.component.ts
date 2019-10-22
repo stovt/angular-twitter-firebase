@@ -29,6 +29,10 @@ export class TweetsComponent implements OnInit, OnDestroy {
     }
   }
 
+  trackTweet(index: number, item: Tweet) {
+    return item ? item.id : undefined;
+  }
+
   ngOnDestroy(): void {
     if (this.tweetsSub) {
       this.tweetsSub.unsubscribe();

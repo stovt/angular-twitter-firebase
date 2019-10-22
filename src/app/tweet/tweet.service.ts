@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -85,15 +84,11 @@ export class TweetService {
         .snapshotChanges()
         .pipe(
           map(docArray => {
-            return docArray.map(doc => ({
-              id: doc.payload.doc.id,
-              body: doc.payload.doc.data().body,
-              createdAt: doc.payload.doc.data().createdAt,
-              user: doc.payload.doc.data().user,
-              likes: doc.payload.doc.data().likes,
-              childrenAmount: doc.payload.doc.data().childrenAmount,
-              parentId: doc.payload.doc.data().parentId
-            }));
+            return docArray.map(doc => {
+              const id = doc.payload.doc.id;
+              const data = doc.payload.doc.data();
+              return { id, ...data };
+            });
           })
         )
         .subscribe(
@@ -122,15 +117,11 @@ export class TweetService {
         .snapshotChanges()
         .pipe(
           map(docArray => {
-            return docArray.map(doc => ({
-              id: doc.payload.doc.id,
-              body: doc.payload.doc.data().body,
-              createdAt: doc.payload.doc.data().createdAt,
-              user: doc.payload.doc.data().user,
-              likes: doc.payload.doc.data().likes,
-              childrenAmount: doc.payload.doc.data().childrenAmount,
-              parentId: doc.payload.doc.data().parentId
-            }));
+            return docArray.map(doc => {
+              const id = doc.payload.doc.id;
+              const data = doc.payload.doc.data();
+              return { id, ...data };
+            });
           })
         )
         .subscribe(
@@ -156,15 +147,11 @@ export class TweetService {
         .snapshotChanges()
         .pipe(
           map(docArray => {
-            return docArray.map(doc => ({
-              id: doc.payload.doc.id,
-              body: doc.payload.doc.data().body,
-              createdAt: doc.payload.doc.data().createdAt,
-              user: doc.payload.doc.data().user,
-              likes: doc.payload.doc.data().likes,
-              childrenAmount: doc.payload.doc.data().childrenAmount,
-              parentId: doc.payload.doc.data().parentId
-            }));
+            return docArray.map(doc => {
+              const id = doc.payload.doc.id;
+              const data = doc.payload.doc.data();
+              return { id, ...data };
+            });
           })
         )
         .subscribe(

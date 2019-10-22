@@ -32,6 +32,10 @@ export class CommentsComponent implements OnInit, OnDestroy {
     }
   }
 
+  trackComment(index: number, item: Tweet) {
+    return item ? item.id : undefined;
+  }
+
   ngOnDestroy() {
     if (this.commentsSub) {
       this.commentsSub.unsubscribe();

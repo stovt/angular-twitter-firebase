@@ -12,4 +12,4 @@
 </div>
 
 <app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
-<app-tweet *ngFor="let tweet of tweets" [tweet]="tweet"></app-tweet>
+<app-tweet *ngFor="let tweet of tweets; trackBy: trackTweet" [tweet]="tweet"></app-tweet>

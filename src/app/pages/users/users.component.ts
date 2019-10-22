@@ -30,6 +30,10 @@ export class UsersComponent implements OnInit, OnDestroy {
     }
   }
 
+  trackUser(index: number, item: User) {
+    return item ? item.userId : undefined;
+  }
+
   ngOnDestroy() {
     if (this.usersSub) {
       this.usersSub.unsubscribe();

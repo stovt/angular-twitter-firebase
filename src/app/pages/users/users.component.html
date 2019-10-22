@@ -1,7 +1,11 @@
 <h1 class="mat-h1 page-title">Users</h1>
 <app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
 <mat-nav-list *ngIf="(isLoading$ | async) === false">
-  <a *ngFor="let user of users" mat-list-item [routerLink]="['/users', user.userId]">
+  <a
+    *ngFor="let user of users; trackBy: trackUser"
+    mat-list-item
+    [routerLink]="['/users', user.userId]"
+  >
     <img *ngIf="user.photoURL" matListAvatar [src]="user.photoURL" [alt]="user.displayName" />
     <mat-icon *ngIf="!user.photoURL" mat-list-icon>person</mat-icon>
     <h3 matLine>{{ user.displayName }}</h3>

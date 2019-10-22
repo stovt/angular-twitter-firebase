@@ -51,6 +51,10 @@ export class UserComponent implements OnInit, OnDestroy {
     }
   }
 
+  trackTweet(index: number, item: Tweet) {
+    return item ? item.id : undefined;
+  }
+
   ngOnDestroy() {
     if (this.userSub) {
       this.userSub.unsubscribe();

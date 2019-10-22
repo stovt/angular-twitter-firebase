@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { formatDistanceToNow } from 'date-fns';
@@ -13,7 +13,7 @@ import * as fromRoot from '../../app.reducer';
   templateUrl: './tweet.component.html',
   styleUrls: ['./tweet.component.css']
 })
-export class TweetComponent implements OnInit, OnDestroy {
+export class TweetComponent implements OnInit, OnChanges, OnDestroy {
   @Input() tweet: Tweet;
 
   user: User;
@@ -36,6 +36,12 @@ export class TweetComponent implements OnInit, OnDestroy {
         this.canRemove = user.userId === this.tweet.user.userId;
       }
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.user) {
+      this.isLiked = changes.tweet.currentValue.likes.indexOf(this.user.userId) !== -1;
+    }
   }
 
   onLikeTweet() {
