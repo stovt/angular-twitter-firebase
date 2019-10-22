@@ -47,7 +47,6 @@ export class AuthService {
           this.store.dispatch(new Auth.SetUser(user));
           this.store.dispatch(new Auth.SetAuthenticated());
         } else {
-          this.cancelSubscriptions();
           this.tweetService.cancelSubscriptions();
           this.store.dispatch(new Auth.SetUnauthenticated());
           this.store.dispatch(new TweetActions.Reset());
@@ -98,21 +97,19 @@ export class AuthService {
 
   fetchUsers() {
     this.store.dispatch(new UI.StartLoadingUsers());
-    this.fbSubs.push(
-      this.afs
-        .collection<User>('users')
-        .valueChanges()
-        .subscribe(
-          users => {
-            this.store.dispatch(new UI.StopLoadingUsers());
-            this.store.dispatch(new Auth.SetUsers(users));
-          },
-          () => {
-            this.store.dispatch(new UI.StopLoadingUsers());
-            this.uiService.showSnackBar('Fetching users failed, please try anain later');
-          }
-        )
-    );
+    this.afs
+      .collection<User>('users')
+      .valueChanges()
+      .subscribe(
+        users => {
+          this.store.dispatch(new UI.StopLoadingUsers());
+          this.store.dispatch(new Auth.SetUsers(users));
+        },
+        () => {
+          this.store.dispatch(new UI.StopLoadingUsers());
+          this.uiService.showSnackBar('Fetching users failed, please try anain later');
+        }
+      );
   }
 
   fetchUser(id: string) {
@@ -156,9 +153,5 @@ export class AuthService {
       .then(credential => this.updateUserData(credential.user))
       .catch(error => this.uiService.showSnackBar(error.message));
     this.router.navigate(['/']);
-  }
-
-  private cancelSubscriptions() {
-    this.fbSubs.forEach(sub => sub.unsubscribe());
   }
 }

@@ -2,7 +2,8 @@
   <mat-card fxFlex.lt-md="100%" fxFlex="800px">
     <mat-card-header fxLayoutAlign="flex-start center">
       <a [routerLink]="['/users', tweet.user.userId]" mat-card-avatar>
-        <img mat-card-avatar [src]="tweet.user.photoURL" />
+        <img *ngIf="tweet.user.photoURL" mat-card-avatar [src]="tweet.user.photoURL" />
+        <mat-icon *ngIf="!tweet.user.photoURL" mat-card-avatar>person</mat-icon>
       </a>
       <a [routerLink]="['/users', tweet.user.userId]" mat-card-title>
         {{ tweet.user.displayName }}
