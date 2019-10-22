@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Store } from '@ngrx/store';
+import { firestore } from 'firebase/app';
 import { Subscription } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 
@@ -48,21 +49,29 @@ export class TweetService {
   }
 
   commentTweet(parentId: string, body: string, resetFormCallback: () => void) {
+    const increment = firestore.FieldValue.increment(1);
+
+    const batch = this.db.firestore.batch();
+
+    const newTweetRef = this.db.firestore.collection('tweets').doc();
+    const parentTweetRef = this.db.firestore.collection('tweets').doc(parentId);
+
     this.store.dispatch(new UI.StartLoadingComment(parentId));
     this.store
       .select(fromRoot.getUser)
       .pipe(take(1))
       .subscribe(user => {
-        this.db
-          .collection('tweets')
-          .add({
-            body,
-            createdAt: new Date(),
-            user,
-            likes: [],
-            childrenAmount: 0,
-            parentId
-          })
+        batch.set(newTweetRef, {
+          body,
+          createdAt: new Date(),
+          user,
+          likes: [],
+          childrenAmount: 0,
+          parentId
+        });
+        batch.update(parentTweetRef, { childrenAmount: increment });
+        batch
+          .commit()
           .then(() => {
             resetFormCallback();
             this.store.dispatch(new UI.StopLoadingComment(parentId));

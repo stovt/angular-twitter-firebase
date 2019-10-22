@@ -16,7 +16,7 @@
       <p [innerHTML]="tweet.body"></p>
     </mat-card-content>
     <mat-card-actions fxLayoutAlign="space-between">
-      <div *ngIf="isTweetLiking" fxLayoutAlign="center center">
+      <div *ngIf="isTweetLiking" class="spinner-container" fxLayoutAlign="center center">
         <mat-spinner diameter="24"></mat-spinner>
       </div>
       <button *ngIf="!isLiked && !isTweetLiking" mat-icon-button (click)="onLikeTweet()">
@@ -27,7 +27,7 @@
         <mat-icon class="liked-icon">favorite</mat-icon>
         <span> {{ tweet.likes.length }}</span>
       </button>
-      <div *ngIf="isTweetRemoving" fxLayoutAlign="center center">
+      <div *ngIf="isTweetRemoving" class="spinner-container" fxLayoutAlign="center center">
         <mat-spinner diameter="24"></mat-spinner>
       </div>
       <button *ngIf="canRemove && !isTweetRemoving" mat-icon-button (click)="onRemoveTweet()">
