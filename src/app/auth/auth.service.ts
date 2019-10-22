@@ -65,6 +65,7 @@ export class AuthService {
           ...credential.user,
           displayName: `${authData.firstName} ${authData.lastName}`
         });
+        this.router.navigate(['/']);
       })
       .catch(error => this.uiService.showSnackBar(error.message));
   }
@@ -72,6 +73,7 @@ export class AuthService {
   signInWithEmailAndPassword(authData: SignInAuthData) {
     return this.afAuth.auth
       .signInWithEmailAndPassword(authData.email, authData.password)
+      .then(() => this.router.navigate(['/']))
       .catch(error => this.uiService.showSnackBar(error.message));
   }
 
@@ -92,20 +94,6 @@ export class AuthService {
 
   signOut() {
     this.afAuth.auth.signOut().catch(error => this.uiService.showSnackBar(error.message));
-  }
-
-  updateUserData(user: firebase.User) {
-    // Sets user data to firestore on login
-    const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
-
-    const data: User = {
-      userId: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL
-    };
-
-    userRef.set(data, { merge: true }).catch(error => this.uiService.showSnackBar(error.message));
   }
 
   fetchUsers() {
@@ -146,6 +134,20 @@ export class AuthService {
     );
   }
 
+  private updateUserData(user: firebase.User) {
+    // Sets user data to firestore on login
+    const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
+
+    const data: User = {
+      userId: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL
+    };
+
+    userRef.set(data, { merge: true }).catch(error => this.uiService.showSnackBar(error.message));
+  }
+
   private socialSignIn(
     provider: auth.GoogleAuthProvider | auth.FacebookAuthProvider | auth.FacebookAuthProvider
   ) {
@@ -153,6 +155,7 @@ export class AuthService {
       .signInWithPopup(provider)
       .then(credential => this.updateUserData(credential.user))
       .catch(error => this.uiService.showSnackBar(error.message));
+    this.router.navigate(['/']);
   }
 
   private cancelSubscriptions() {
