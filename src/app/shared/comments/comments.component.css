@@ -2,6 +2,9 @@
   width: 800px;
   margin: 0 auto 16px auto;
 }
+.comments.is-mobile {
+  width: 100%;
+}
 
 mat-divider {
   width: 0;

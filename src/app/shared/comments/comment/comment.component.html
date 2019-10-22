@@ -1,6 +1,6 @@
-<mat-divider vertical></mat-divider>
-<section fxLayout fxLayoutAlign="flex-end">
-  <mat-card fxFlex.lt-md="100%" fxFlex="750px">
+<mat-divider [ngClass.lt-md]="'is-mobile'" vertical></mat-divider>
+<section class="comment" [ngClass.lt-md]="'is-mobile'" fxLayout fxLayoutAlign="flex-end">
+  <mat-card fxFlex.lt-md="95%" fxFlex="750px">
     <mat-card-header fxLayoutAlign="flex-start center">
       <a [routerLink]="['/users', comment.user.userId]" mat-card-avatar>
         <img mat-card-avatar [src]="comment.user.photoURL" />

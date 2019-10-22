@@ -1,5 +1,5 @@
 <mat-divider vertical></mat-divider>
-<div class="comments">
+<div class="comments" [ngClass.lt-md]="'is-mobile'">
   <app-tweet-comment-form [tweetId]="tweetId"></app-tweet-comment-form>
   <app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
   <app-tweet-comment

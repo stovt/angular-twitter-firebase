@@ -1,3 +1,7 @@
+.comment.is-mobile {
+  margin: 0 16px;
+}
+
 .mat-card-avatar {
   margin-bottom: 16px;
 }
@@ -20,4 +24,8 @@ mat-divider {
   width: 50px;
   height: 16px;
   margin: 8px auto;
+}
+
+mat-divider.is-mobile {
+  width: 5%;
 }

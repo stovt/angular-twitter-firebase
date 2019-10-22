@@ -1,10 +1,10 @@
-<section fxLayout fxLayoutAlign="flex-end">
+<section class="comment-form" [ngClass.lt-md]="'is-mobile'" fxLayout fxLayoutAlign="flex-end">
   <form
     fxLayout="column"
     fxLayoutAlign="center center"
     [formGroup]="commentForm"
     (ngSubmit)="onSubmit(commentForm.value)"
-    fxFlex.lt-md="100%"
+    fxFlex.lt-md="95%"
     fxFlex="750px"
     #f="ngForm"
   >
