@@ -15,3 +15,6 @@
 
 <app-loading-spinner *ngIf="isTweetsLoading$ | async"></app-loading-spinner>
 <app-tweet *ngFor="let tweet of tweets; trackBy: trackTweet" [tweet]="tweet"></app-tweet>
+<app-empty-placeholder *ngIf="(isTweetsLoading$ | async) === false && !tweets.length">
+  User has no tweets posted
+</app-empty-placeholder>

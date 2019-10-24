@@ -13,3 +13,6 @@
 
 <app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
 <app-tweet *ngFor="let tweet of tweets; trackBy: trackTweet" [tweet]="tweet"></app-tweet>
+<app-empty-placeholder *ngIf="(isLoading$ | async) === false && !tweets.length">
+  You have no tweets posted. Tweet your message above
+</app-empty-placeholder>

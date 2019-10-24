@@ -11,6 +11,7 @@ import { TweetFormComponent } from './tweet-form/tweet-form.component';
 import { CommentsComponent } from './comments/comments.component';
 import { CommentFormComponent } from './comments/comment-form/comment-form.component';
 import { CommentComponent } from './comments/comment/comment.component';
+import { EmptyPlaceholderComponent } from './empty-placeholder/empty-placeholder.component';
 
 @NgModule({
   imports: [CommonModule, RouterModule, ReactiveFormsModule, MaterialModule, FlexLayoutModule],
@@ -22,7 +23,8 @@ import { CommentComponent } from './comments/comment/comment.component';
     FlexLayoutModule,
     LoadingSpinnerComponent,
     TweetComponent,
-    TweetFormComponent
+    TweetFormComponent,
+    EmptyPlaceholderComponent
   ],
   declarations: [
     LoadingSpinnerComponent,
@@ -30,7 +32,8 @@ import { CommentComponent } from './comments/comment/comment.component';
     TweetFormComponent,
     CommentsComponent,
     CommentFormComponent,
-    CommentComponent
+    CommentComponent,
+    EmptyPlaceholderComponent
   ]
 })
 export class SharedModule {}

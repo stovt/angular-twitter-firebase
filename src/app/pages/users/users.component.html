@@ -12,3 +12,6 @@
     <p matLine>{{ user.email }}</p>
   </a>
 </mat-nav-list>
+<app-empty-placeholder *ngIf="(isLoading$ | async) === false && !users.length">
+  No users
+</app-empty-placeholder>
