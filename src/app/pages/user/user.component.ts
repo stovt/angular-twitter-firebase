@@ -86,6 +86,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
       if (top > height - offset - 1 && !this.isTweetsLoading && !this.isTweetsDone) {
         this.tweetService.fetchUserTweets(userId);
+        el.scrollTop = height;
       }
     });
   }

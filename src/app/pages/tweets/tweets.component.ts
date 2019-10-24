@@ -55,6 +55,7 @@ export class TweetsComponent implements OnInit, OnDestroy {
 
       if (top > height - offset - 1 && !this.isLoading && !this.isDone) {
         this.tweetService.fetchAllTweets();
+        el.scrollTop = height;
       }
     });
   }

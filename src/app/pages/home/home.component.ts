@@ -67,6 +67,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
           if (top > height - offset - 1 && !this.isLoading && !this.isDone) {
             this.tweetService.fetchUserTweets(user.userId);
+            el.scrollTop = height;
           }
         });
       }
