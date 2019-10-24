@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 
@@ -21,11 +21,13 @@ export class UserComponent implements OnInit, OnDestroy {
   isUserLoading$: Observable<boolean>;
   isTweetsLoading$: Observable<boolean>;
 
+  authUserSub: Subscription;
   userSub: Subscription;
   tweetsSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private store: Store<fromRoot.State>,
     private authService: AuthService,
     private tweetService: TweetService
@@ -33,6 +35,11 @@ export class UserComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const userId = this.route.snapshot.paramMap.get('id');
+    this.authUserSub = this.store.select(fromRoot.getUser).subscribe(user => {
+      if (user.userId === userId) {
+        this.router.navigate(['/']);
+      }
+    });
 
     this.isUserLoading$ = this.store.select(fromRoot.getIsUserLoading(userId));
     this.userSub = this.store.select(fromRoot.getUserById(userId)).subscribe(user => {
@@ -56,6 +63,9 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.authUserSub) {
+      this.authUserSub.unsubscribe();
+    }
     if (this.userSub) {
       this.userSub.unsubscribe();
     }
