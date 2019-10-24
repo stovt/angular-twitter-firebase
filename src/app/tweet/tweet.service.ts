@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { Store } from '@ngrx/store';
 import { firestore } from 'firebase/app';
-import { Subscription } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { take, map, mergeMap } from 'rxjs/operators';
 
 import { Tweet } from './tweet.model';
 import { UIService } from '../shared/ui.service';
@@ -13,8 +12,6 @@ import * as fromRoot from '../app.reducer';
 
 @Injectable({ providedIn: 'root' })
 export class TweetService {
-  private fbSubs: Subscription[] = [];
-
   constructor(
     private db: AngularFirestore,
     private uiService: UIService,
@@ -31,7 +28,8 @@ export class TweetService {
           .collection('tweets')
           .add({
             body,
-            createdAt: new Date(),
+            createdAt: firestore.FieldValue.serverTimestamp(),
+            createdAtLocal: new Date(),
             user,
             likes: [],
             childrenAmount: 0,
@@ -63,13 +61,15 @@ export class TweetService {
       .subscribe(user => {
         batch.set(newTweetRef, {
           body,
-          createdAt: new Date(),
+          createdAt: firestore.FieldValue.serverTimestamp(),
+          createdAtLocal: new Date(),
           user,
           likes: [],
           childrenAmount: 0,
           parentId
         });
         batch.update(parentTweetRef, { childrenAmount: increment });
+
         batch
           .commit()
           .then(() => {
@@ -83,97 +83,134 @@ export class TweetService {
       });
   }
 
-  fetchAllTweets() {
+  fetchAllTweetsInit() {
     this.store.dispatch(new UI.StartLoadingAllTweets());
-    this.fbSubs.push(
-      this.db
-        .collection<Tweet>('tweets', ref =>
-          ref.where('parentId', '==', null).orderBy('createdAt', 'desc')
-        )
-        .snapshotChanges()
-        .pipe(
-          map(docArray => {
-            return docArray.map(doc => {
-              const id = doc.payload.doc.id;
-              const data = doc.payload.doc.data();
-              return { id, ...data };
+    this.db
+      .collection<Tweet>('tweets', ref =>
+        ref
+          .where('parentId', '==', null)
+          .limit(10)
+          .orderBy('createdAt', 'desc')
+      )
+      .stateChanges()
+      .pipe(map(actions => this.handleTweetsData(actions)))
+      .subscribe(
+        actions => {
+          actions.forEach(action => {
+            this.store.dispatch({
+              type: `[Tweet] All Tweets ${action.type}`,
+              payload: action.payload
             });
-          })
-        )
-        .subscribe(
-          tweets => {
-            this.store.dispatch(new UI.StopLoadingAllTweets());
-            this.store.dispatch(new TweetActions.SetAllTweets(tweets));
-          },
-          error => {
-            this.store.dispatch(new UI.StopLoadingAllTweets());
-            this.uiService.showSnackBar(error.message);
-          }
-        )
-    );
+          });
+          this.store.dispatch(new UI.StopLoadingAllTweets());
+        },
+        error => {
+          this.uiService.showSnackBar(error.message);
+          this.store.dispatch(new UI.StopLoadingAllTweets());
+        }
+      );
+  }
+
+  fetchAllTweetsMore() {
+    this.store.dispatch(new UI.StartLoadingAllTweets());
+    this.store
+      .select(fromRoot.getAllTweetsCursor)
+      .pipe(take(1))
+      .subscribe(cursor => {
+        this.db
+          .collection<Tweet>('tweets', ref =>
+            ref
+              .where('parentId', '==', null)
+              .limit(10)
+              .orderBy('createdAt', 'desc')
+              .startAfter(cursor)
+          )
+          .stateChanges()
+          .pipe(map(actions => this.handleTweetsData(actions)))
+          .subscribe(
+            actions => {
+              if (!actions.length) {
+                this.store.dispatch(new TweetActions.SetAllTweetsDone());
+              }
+              actions.forEach(action => {
+                this.store.dispatch({
+                  type: `[Tweet] All Tweets ${action.type}`,
+                  payload: action.payload
+                });
+              });
+              this.store.dispatch(new UI.StopLoadingAllTweets());
+            },
+            error => {
+              this.uiService.showSnackBar(error.message);
+              this.store.dispatch(new UI.StopLoadingAllTweets());
+            }
+          );
+      });
   }
 
   fetchUserTweets(userId: string) {
     this.store.dispatch(new UI.StartLoadingUserTweets(userId));
-    this.fbSubs.push(
-      this.db
-        .collection<Tweet>('tweets', ref =>
-          ref
-            .where('parentId', '==', null)
-            .where('user.userId', '==', userId)
-            .orderBy('createdAt', 'desc')
-        )
-        .snapshotChanges()
-        .pipe(
-          map(docArray => {
-            return docArray.map(doc => {
-              const id = doc.payload.doc.id;
-              const data = doc.payload.doc.data();
-              return { id, ...data };
-            });
-          })
-        )
-        .subscribe(
-          tweets => {
-            this.store.dispatch(new UI.StopLoadingUserTweets(userId));
-            this.store.dispatch(new TweetActions.SetUserTweets({ userId, tweets }));
-          },
-          error => {
-            this.store.dispatch(new UI.StopLoadingUserTweets(userId));
-            this.uiService.showSnackBar(error.message);
-          }
-        )
-    );
+    this.db
+      .collection<Tweet>('tweets', ref =>
+        ref
+          .where('parentId', '==', null)
+          .where('user.userId', '==', userId)
+          .orderBy('createdAt', 'desc')
+      )
+      .snapshotChanges()
+      .pipe(
+        map(docArray => {
+          return docArray.map(doc => {
+            const id = doc.payload.doc.id;
+            const data = {
+              ...doc.payload.doc.data(),
+              createdAt: doc.payload.doc.data().createdAt || doc.payload.doc.data().createdAtLocal
+            };
+            return { id, ...data };
+          });
+        })
+      )
+      .subscribe(
+        tweets => {
+          this.store.dispatch(new UI.StopLoadingUserTweets(userId));
+          this.store.dispatch(new TweetActions.SetUserTweets({ userId, tweets }));
+        },
+        error => {
+          this.store.dispatch(new UI.StopLoadingUserTweets(userId));
+          this.uiService.showSnackBar(error.message);
+        }
+      );
   }
 
   fetchTweetComments(tweetId: string) {
     this.store.dispatch(new UI.StartLoadingComments(tweetId));
-    this.fbSubs.push(
-      this.db
-        .collection<Tweet>('tweets', ref =>
-          ref.where('parentId', '==', tweetId).orderBy('createdAt', 'desc')
-        )
-        .snapshotChanges()
-        .pipe(
-          map(docArray => {
-            return docArray.map(doc => {
-              const id = doc.payload.doc.id;
-              const data = doc.payload.doc.data();
-              return { id, ...data };
-            });
-          })
-        )
-        .subscribe(
-          comments => {
-            this.store.dispatch(new UI.StopLoadingComments(tweetId));
-            this.store.dispatch(new TweetActions.SetTweetComments({ tweetId, comments }));
-          },
-          error => {
-            this.store.dispatch(new UI.StopLoadingComments(tweetId));
-            this.uiService.showSnackBar(error.message);
-          }
-        )
-    );
+    this.db
+      .collection<Tweet>('tweets', ref =>
+        ref.where('parentId', '==', tweetId).orderBy('createdAt', 'desc')
+      )
+      .snapshotChanges()
+      .pipe(
+        map(docArray => {
+          return docArray.map(doc => {
+            const id = doc.payload.doc.id;
+            const data = {
+              ...doc.payload.doc.data(),
+              createdAt: doc.payload.doc.data().createdAt || doc.payload.doc.data().createdAtLocal
+            };
+            return { id, ...data };
+          });
+        })
+      )
+      .subscribe(
+        comments => {
+          this.store.dispatch(new UI.StopLoadingComments(tweetId));
+          this.store.dispatch(new TweetActions.SetTweetComments({ tweetId, comments }));
+        },
+        error => {
+          this.store.dispatch(new UI.StopLoadingComments(tweetId));
+          this.uiService.showSnackBar(error.message);
+        }
+      );
   }
 
   likeTweet(id: string, likes: string[]) {
@@ -190,7 +227,21 @@ export class TweetService {
       .catch(e => this.uiService.showSnackBar(e.message));
   }
 
-  cancelSubscriptions() {
-    this.fbSubs.forEach(sub => sub.unsubscribe());
+  private handleTweetsData(actions: DocumentChangeAction<Tweet>[]) {
+    return actions.map(action => {
+      const id = action.payload.doc.id;
+      const data = {
+        ...action.payload.doc.data(),
+        createdAt: action.payload.doc.data().createdAt || action.payload.doc.data().createdAtLocal
+      };
+      const doc = action.payload.doc;
+      return {
+        ...action,
+        payload: {
+          tweet: { id, ...data },
+          doc
+        }
+      };
+    });
   }
 }

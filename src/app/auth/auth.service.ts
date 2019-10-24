@@ -10,7 +10,6 @@ import { switchMap } from 'rxjs/operators';
 import { User } from './user.model';
 import { SignInAuthData, SignUpAuthData } from './auth-data.model';
 import { UIService } from '../shared/ui.service';
-import { TweetService } from '../tweet/tweet.service';
 import * as UI from '../shared/ui.actions';
 import * as Auth from './auth.actions';
 import * as TweetActions from '../tweet/tweet.actions';
@@ -27,7 +26,6 @@ export class AuthService {
     private afs: AngularFirestore,
     private router: Router,
     private uiService: UIService,
-    private tweetService: TweetService,
     private store: Store<fromRoot.State>
   ) {}
 
@@ -47,7 +45,6 @@ export class AuthService {
           this.store.dispatch(new Auth.SetUser(user));
           this.store.dispatch(new Auth.SetAuthenticated());
         } else {
-          this.tweetService.cancelSubscriptions();
           this.store.dispatch(new Auth.SetUnauthenticated());
           this.store.dispatch(new TweetActions.Reset());
           this.router.navigate(['/signin']);

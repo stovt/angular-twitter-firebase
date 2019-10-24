@@ -77,6 +77,14 @@ export const getAllTweets = createSelector(
   getTweetState,
   fromTweet.getAllTweets
 );
+export const getAllTweetsCursor = createSelector(
+  getTweetState,
+  fromTweet.getAllTweetsCursor
+);
+export const getIsAllTweetsLoaded = createSelector(
+  getTweetState,
+  fromTweet.getIsAllTweetsLoaded
+);
 export const getUserTweets = (userId: string) =>
   createSelector(
     getTweetState,
