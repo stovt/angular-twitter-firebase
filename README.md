@@ -1,4 +1,4 @@
-# Twitter - Made with Angular 8
+# Twitter - Made with Angular 8 and Firebase
 
 Demo: [https://twitter-8cfba.web.app/](https://twitter-8cfba.web.app/)
 
