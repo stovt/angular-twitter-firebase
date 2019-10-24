@@ -11,8 +11,9 @@
   </h1>
 </div>
 
-<app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
 <app-tweet *ngFor="let tweet of tweets; trackBy: trackTweet" [tweet]="tweet"></app-tweet>
-<app-empty-placeholder *ngIf="(isLoading$ | async) === false && !tweets.length">
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<app-empty-placeholder *ngIf="!isLoading && !tweets.length">
   You have no tweets posted. Tweet your message above
 </app-empty-placeholder>
+<app-empty-placeholder *ngIf="!isLoading && isDone">You have reached the end</app-empty-placeholder>

@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { ScrollDispatcher, CdkScrollable } from '@angular/cdk/overlay';
 import { Observable, Subscription } from 'rxjs';
 
 import { User } from '../../auth/user.model';
@@ -16,21 +17,27 @@ import * as fromRoot from '../../app.reducer';
 })
 export class UserComponent implements OnInit, OnDestroy {
   user: User;
-  tweets: Tweet[];
+  tweets: Tweet[] = [];
 
   isUserLoading$: Observable<boolean>;
-  isTweetsLoading$: Observable<boolean>;
+  isTweetsLoading: boolean;
+  isTweetsDone: boolean;
 
   authUserSub: Subscription;
   userSub: Subscription;
   tweetsSub: Subscription;
+  tweetsLoadingSub: Subscription;
+  tweetsDoneSub: Subscription;
+  scrollingSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private store: Store<fromRoot.State>,
     private authService: AuthService,
-    private tweetService: TweetService
+    private tweetService: TweetService,
+    private scroll: ScrollDispatcher,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -49,13 +56,38 @@ export class UserComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.isTweetsLoading$ = this.store.select(fromRoot.getIsTweetsByUserIdLoading(userId));
+    this.tweetsLoadingSub = this.store
+      .select(fromRoot.getIsTweetsByUserIdLoading(userId))
+      .subscribe(isTweetsLoading => {
+        this.isTweetsLoading = isTweetsLoading;
+        this.cdr.detectChanges();
+      });
+    this.tweetsDoneSub = this.store
+      .select(fromRoot.getIsUserTweetsLoaded(userId))
+      .subscribe(isTweetsDone => {
+        this.isTweetsDone = isTweetsDone;
+        this.cdr.detectChanges();
+      });
+
     this.tweetsSub = this.store
       .select(fromRoot.getUserTweets(userId))
       .subscribe(tweets => (this.tweets = tweets));
+
     if (!this.tweets.length) {
       this.tweetService.fetchUserTweets(userId);
     }
+
+    this.scrollingSub = this.scroll.scrolled().subscribe((data: CdkScrollable) => {
+      const el = data.getElementRef().nativeElement;
+
+      const top = el.scrollTop || 0;
+      const height = el.scrollHeight;
+      const offset = el.offsetHeight;
+
+      if (top > height - offset - 1 && !this.isTweetsLoading && !this.isTweetsDone) {
+        this.tweetService.fetchUserTweets(userId);
+      }
+    });
   }
 
   trackTweet(index: number, item: Tweet) {
@@ -71,6 +103,15 @@ export class UserComponent implements OnInit, OnDestroy {
     }
     if (this.tweetsSub) {
       this.tweetsSub.unsubscribe();
+    }
+    if (this.tweetsLoadingSub) {
+      this.tweetsLoadingSub.unsubscribe();
+    }
+    if (this.tweetsDoneSub) {
+      this.tweetsDoneSub.unsubscribe();
+    }
+    if (this.scrollingSub) {
+      this.scrollingSub.unsubscribe();
     }
   }
 }

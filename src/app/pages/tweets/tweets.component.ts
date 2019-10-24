@@ -13,7 +13,7 @@ import * as fromRoot from '../../app.reducer';
   styleUrls: ['./tweets.component.css']
 })
 export class TweetsComponent implements OnInit, OnDestroy {
-  tweets: Tweet[];
+  tweets: Tweet[] = [];
   isLoading: boolean;
   isDone: boolean;
 

@@ -3,7 +3,8 @@
   <mat-card *ngIf="user" fxFlex.lt-md="100%" fxFlex="800px" color="primary">
     <mat-card-header fxLayoutAlign="flex-start center">
       <a [routerLink]="['/users', user.userId]" mat-card-avatar>
-        <img mat-card-avatar [src]="user.photoURL" />
+        <img *ngIf="user.photoURL" mat-card-avatar [src]="user.photoURL" />
+        <mat-icon *ngIf="!user.photoURL" mat-card-avatar>person</mat-icon>
       </a>
       <a [routerLink]="['/users', user.userId]" mat-card-title>
         {{ user.displayName }}
@@ -13,8 +14,11 @@
   </mat-card>
 </section>
 
-<app-loading-spinner *ngIf="isTweetsLoading$ | async"></app-loading-spinner>
 <app-tweet *ngFor="let tweet of tweets; trackBy: trackTweet" [tweet]="tweet"></app-tweet>
-<app-empty-placeholder *ngIf="(isTweetsLoading$ | async) === false && !tweets.length">
+<app-loading-spinner *ngIf="isTweetsLoading"></app-loading-spinner>
+<app-empty-placeholder *ngIf="!isTweetsLoading && !tweets.length">
   User has no tweets posted
+</app-empty-placeholder>
+<app-empty-placeholder *ngIf="!isTweetsLoading && isTweetsDone && tweets.length">
+  You have reached the end
 </app-empty-placeholder>

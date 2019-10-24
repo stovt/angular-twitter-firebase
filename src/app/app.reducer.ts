@@ -90,6 +90,16 @@ export const getUserTweets = (userId: string) =>
     getTweetState,
     fromTweet.getUserTweets(userId)
   );
+export const getUserTweetsCursor = (userId: string) =>
+  createSelector(
+    getTweetState,
+    fromTweet.getUserTweetsCursor(userId)
+  );
+export const getIsUserTweetsLoaded = (userId: string) =>
+  createSelector(
+    getTweetState,
+    fromTweet.getIsUserTweetsLoaded(userId)
+  );
 export const getTweetComments = (tweetId: string) =>
   createSelector(
     getTweetState,

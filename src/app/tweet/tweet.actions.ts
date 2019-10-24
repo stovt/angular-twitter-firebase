@@ -7,7 +7,10 @@ export const ALL_TWEETS_ADDED = '[Tweet] All Tweets added';
 export const ALL_TWEETS_MODIFIED = '[Tweet] All Tweets modified';
 export const ALL_TWEETS_REMOVED = '[Tweet] All Tweets removed';
 export const ALL_TWEETS_DONE = '[Tweet] All Tweets done';
-export const SET_USER_TWEETS = '[Tweet] Set User Tweets';
+export const USER_TWEETS_ADDED = '[Tweet] User Tweets added';
+export const USER_TWEETS_MODIFIED = '[Tweet] User Tweets modified';
+export const USER_TWEETS_REMOVED = '[Tweet] User Tweets removed';
+export const USER_TWEETS_DONE = '[Tweet] User Tweets done';
 export const SET_TWEET_COMMENTS = '[Tweet] Set Tweet Comments';
 export const RESET = '[Tweet] RESET';
 
@@ -48,15 +51,46 @@ export class SetAllTweetsDone implements Action {
   readonly type = ALL_TWEETS_DONE;
 }
 
-export class SetUserTweets implements Action {
-  readonly type = SET_USER_TWEETS;
+export class SetUserTweetsAdded implements Action {
+  readonly type = USER_TWEETS_ADDED;
 
   constructor(
     public payload: {
       userId: string;
-      tweets: Tweet[];
+      tweet: Tweet;
+      doc: QueryDocumentSnapshot<Tweet>;
     }
   ) {}
+}
+
+export class SetUserTweetsModified implements Action {
+  readonly type = USER_TWEETS_MODIFIED;
+
+  constructor(
+    public payload: {
+      userId: string;
+      tweet: Tweet;
+      doc: QueryDocumentSnapshot<Tweet>;
+    }
+  ) {}
+}
+
+export class SetUserTweetsRemoved implements Action {
+  readonly type = USER_TWEETS_REMOVED;
+
+  constructor(
+    public payload: {
+      userId: string;
+      tweet: Tweet;
+      doc: QueryDocumentSnapshot<Tweet>;
+    }
+  ) {}
+}
+
+export class SetUserTweetsDone implements Action {
+  readonly type = USER_TWEETS_DONE;
+
+  constructor(public payload: string) {}
 }
 
 export class SetTweetComments implements Action {
@@ -79,6 +113,9 @@ export type TweetActions =
   | SetAllTweetsModified
   | SetAllTweetsRemoved
   | SetAllTweetsDone
-  | SetUserTweets
+  | SetUserTweetsAdded
+  | SetUserTweetsModified
+  | SetUserTweetsRemoved
+  | SetUserTweetsDone
   | SetTweetComments
   | Reset;

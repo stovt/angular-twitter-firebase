@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
+import {
+  AngularFirestore,
+  DocumentChangeAction,
+  QueryDocumentSnapshot
+} from '@angular/fire/firestore';
 import { Store } from '@ngrx/store';
 import { firestore } from 'firebase/app';
 import { Observable } from 'rxjs';
@@ -114,7 +118,7 @@ export class TweetService {
 
         tweets$.pipe(map(actions => this.handleTweetsData(actions))).subscribe(
           actions => {
-            if (!actions.length || actions.length < limit) {
+            if (this.isTweetsLoaded(actions, limit)) {
               this.store.dispatch(new TweetActions.SetAllTweetsDone());
             }
             actions.forEach(action => {
@@ -133,38 +137,58 @@ export class TweetService {
       });
   }
 
-  fetchUserTweets(userId: string) {
+  fetchUserTweets(userId: string, limit: number = 10) {
     this.store.dispatch(new UI.StartLoadingUserTweets(userId));
-    this.db
-      .collection<Tweet>('tweets', ref =>
-        ref
-          .where('parentId', '==', null)
-          .where('user.userId', '==', userId)
-          .orderBy('createdAt', 'desc')
-      )
-      .snapshotChanges()
-      .pipe(
-        map(docArray => {
-          return docArray.map(doc => {
-            const id = doc.payload.doc.id;
-            const data = {
-              ...doc.payload.doc.data(),
-              createdAt: doc.payload.doc.data().createdAt || doc.payload.doc.data().createdAtLocal
-            };
-            return { id, ...data };
-          });
-        })
-      )
-      .subscribe(
-        tweets => {
-          this.store.dispatch(new UI.StopLoadingUserTweets(userId));
-          this.store.dispatch(new TweetActions.SetUserTweets({ userId, tweets }));
-        },
-        error => {
-          this.store.dispatch(new UI.StopLoadingUserTweets(userId));
-          this.uiService.showSnackBar(error.message);
+    this.store
+      .select(fromRoot.getUserTweetsCursor(userId))
+      .pipe(take(1))
+      .subscribe(cursor => {
+        let tweets$: Observable<DocumentChangeAction<Tweet>[]>;
+        if (cursor) {
+          tweets$ = this.db
+            .collection<Tweet>('tweets', ref =>
+              ref
+                .where('parentId', '==', null)
+                .where('user.userId', '==', userId)
+                .limit(limit)
+                .orderBy('createdAt', 'desc')
+                .startAfter(cursor)
+            )
+            .stateChanges();
+        } else {
+          tweets$ = this.db
+            .collection<Tweet>('tweets', ref =>
+              ref
+                .where('parentId', '==', null)
+                .where('user.userId', '==', userId)
+                .limit(limit)
+                .orderBy('createdAt', 'desc')
+            )
+            .stateChanges();
         }
-      );
+
+        tweets$.pipe(map(actions => this.handleTweetsData(actions))).subscribe(
+          actions => {
+            if (this.isTweetsLoaded(actions, limit)) {
+              this.store.dispatch(new TweetActions.SetUserTweetsDone(userId));
+            }
+            actions.forEach(action => {
+              this.store.dispatch({
+                type: `[Tweet] User Tweets ${action.type}`,
+                payload: {
+                  ...action.payload,
+                  userId
+                }
+              });
+            });
+            this.store.dispatch(new UI.StopLoadingUserTweets(userId));
+          },
+          error => {
+            this.uiService.showSnackBar(error.message);
+            this.store.dispatch(new UI.StopLoadingUserTweets(userId));
+          }
+        );
+      });
   }
 
   fetchTweetComments(tweetId: string) {
@@ -228,5 +252,23 @@ export class TweetService {
         }
       };
     });
+  }
+
+  private isTweetsLoaded(
+    actions: {
+      payload: {
+        tweet: Tweet;
+        doc: QueryDocumentSnapshot<Tweet>;
+      };
+      type: firestore.DocumentChangeType;
+    }[],
+    limit: number
+  ) {
+    const isAddingActions =
+      actions.filter(action => action.type === 'added').length === actions.length;
+    if (isAddingActions && actions.length < limit) {
+      return true;
+    }
+    return false;
   }
 }

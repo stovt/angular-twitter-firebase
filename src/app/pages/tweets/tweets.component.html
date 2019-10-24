@@ -2,3 +2,6 @@
 <app-tweet *ngFor="let tweet of tweets; trackBy: trackTweet" [tweet]="tweet"></app-tweet>
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <app-empty-placeholder *ngIf="!isLoading && isDone">You have reached the end</app-empty-placeholder>
+<app-empty-placeholder *ngIf="!isLoading && !tweets.length">
+  No tweets posted
+</app-empty-placeholder>

@@ -5,7 +5,10 @@ import {
   ALL_TWEETS_MODIFIED,
   ALL_TWEETS_REMOVED,
   ALL_TWEETS_DONE,
-  SET_USER_TWEETS,
+  USER_TWEETS_ADDED,
+  USER_TWEETS_MODIFIED,
+  USER_TWEETS_REMOVED,
+  USER_TWEETS_DONE,
   SET_TWEET_COMMENTS,
   RESET
 } from './tweet.actions';
@@ -18,7 +21,14 @@ export interface State {
     docs: QueryDocumentSnapshot<Tweet>[];
     done: boolean;
   };
-  tweetsByUserId: Record<string, Tweet[]>;
+  tweetsByUserId: Record<
+    string,
+    {
+      tweets: Tweet[];
+      docs: QueryDocumentSnapshot<Tweet>[];
+      done: boolean;
+    }
+  >;
   commentsByTweetId: Record<string, Tweet[]>;
 }
 
@@ -79,12 +89,73 @@ export function tweetReducer(state = initialState, action: TweetActions) {
           done: true
         }
       };
-    case SET_USER_TWEETS:
+    case USER_TWEETS_ADDED:
       return {
         ...state,
         tweetsByUserId: {
           ...state.tweetsByUserId,
-          [action.payload.userId]: action.payload.tweets
+          [action.payload.userId]: {
+            ...(state.tweetsByUserId[action.payload.userId] || {}),
+            tweets:
+              state.tweetsByUserId[action.payload.userId] &&
+              state.tweetsByUserId[action.payload.userId].tweets
+                ? [...state.tweetsByUserId[action.payload.userId].tweets, action.payload.tweet]
+                : [action.payload.tweet],
+            docs:
+              state.tweetsByUserId[action.payload.userId] &&
+              state.tweetsByUserId[action.payload.userId].docs
+                ? [...state.tweetsByUserId[action.payload.userId].docs, action.payload.doc]
+                : [action.payload.doc]
+          }
+        }
+      };
+    case USER_TWEETS_MODIFIED:
+      return {
+        ...state,
+        tweetsByUserId: {
+          ...state.tweetsByUserId,
+          [action.payload.userId]: {
+            ...state.tweetsByUserId[action.payload.userId],
+            tweets: state.tweetsByUserId[action.payload.userId].tweets.map(tweet => {
+              if (tweet.id === action.payload.tweet.id) {
+                return action.payload.tweet;
+              }
+              return tweet;
+            }),
+            docs: state.tweetsByUserId[action.payload.userId].docs.map(doc => {
+              if (doc.id === action.payload.doc.id) {
+                return action.payload.doc;
+              }
+              return doc;
+            })
+          }
+        }
+      };
+    case USER_TWEETS_REMOVED:
+      return {
+        ...state,
+        tweetsByUserId: {
+          ...state.tweetsByUserId,
+          [action.payload.userId]: {
+            ...state.tweetsByUserId[action.payload.userId],
+            tweets: state.tweetsByUserId[action.payload.userId].tweets.filter(
+              t => t.id !== action.payload.tweet.id
+            ),
+            docs: state.tweetsByUserId[action.payload.userId].docs.filter(
+              d => d.id !== action.payload.doc.id
+            )
+          }
+        }
+      };
+    case USER_TWEETS_DONE:
+      return {
+        ...state,
+        tweetsByUserId: {
+          ...state.tweetsByUserId,
+          [action.payload]: {
+            ...(state.tweetsByUserId[action.payload] || {}),
+            done: true
+          }
         }
       };
     case SET_TWEET_COMMENTS:
@@ -119,7 +190,31 @@ export const getAllTweetsCursor = (state: State) =>
         .getTime()
   )[state.allTweets.docs.length - 1];
 export const getIsAllTweetsLoaded = (state: State) => state.allTweets.done;
+
 export const getUserTweets = (userId: string) => (state: State) =>
-  state.tweetsByUserId[userId] || [];
+  state.tweetsByUserId[userId] && state.tweetsByUserId[userId].tweets
+    ? state.tweetsByUserId[userId].tweets.sort(
+        (a, b) => b.createdAt.toDate().getTime() - a.createdAt.toDate().getTime()
+      )
+    : [];
+export const getUserTweetsCursor = (userId: string) => (state: State) =>
+  state.tweetsByUserId[userId] && state.tweetsByUserId[userId].docs
+    ? state.tweetsByUserId[userId].docs.sort(
+        (a, b) =>
+          b
+            .data()
+            .createdAt.toDate()
+            .getTime() -
+          a
+            .data()
+            .createdAt.toDate()
+            .getTime()
+      )[state.tweetsByUserId[userId].docs.length - 1]
+    : null;
+export const getIsUserTweetsLoaded = (userId: string) => (state: State) =>
+  state.tweetsByUserId[userId] && state.tweetsByUserId[userId].done
+    ? state.tweetsByUserId[userId].done
+    : false;
+
 export const getTweetComments = (tweetId: string) => (state: State) =>
   state.commentsByTweetId[tweetId] || [];
