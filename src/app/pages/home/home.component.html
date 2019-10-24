@@ -16,4 +16,6 @@
 <app-empty-placeholder *ngIf="!isLoading && !tweets.length">
   You have no tweets posted. Tweet your message above
 </app-empty-placeholder>
-<app-empty-placeholder *ngIf="!isLoading && isDone">You have reached the end</app-empty-placeholder>
+<app-empty-placeholder *ngIf="!isLoading && isDone && tweets.length">
+  You have reached the end
+</app-empty-placeholder>
