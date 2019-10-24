@@ -24,9 +24,9 @@ export interface State {
   tweetsByUserId: Record<
     string,
     {
-      tweets: Tweet[];
-      docs: QueryDocumentSnapshot<Tweet>[];
-      done: boolean;
+      tweets?: Tweet[];
+      docs?: QueryDocumentSnapshot<Tweet>[];
+      done?: boolean;
     }
   >;
   commentsByTweetId: Record<string, Tweet[]>;
