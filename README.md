@@ -1,6 +1,6 @@
 # Twitter - Made with Angular 8
 
-Demo: [https://twitter-8cfba.firebaseapp.com/](https://twitter-8cfba.firebaseapp.com/)
+Demo: [https://twitter-8cfba.web.app/](https://twitter-8cfba.web.app/)
 
 ## Prerequisites
 
