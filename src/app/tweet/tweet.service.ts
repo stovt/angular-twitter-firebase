@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { Store } from '@ngrx/store';
 import { firestore } from 'firebase/app';
-import { take, map, mergeMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { take, map } from 'rxjs/operators';
 
 import { Tweet } from './tweet.model';
 import { UIService } from '../shared/ui.service';
@@ -83,68 +84,52 @@ export class TweetService {
       });
   }
 
-  fetchAllTweetsInit() {
-    this.store.dispatch(new UI.StartLoadingAllTweets());
-    this.db
-      .collection<Tweet>('tweets', ref =>
-        ref
-          .where('parentId', '==', null)
-          .limit(10)
-          .orderBy('createdAt', 'desc')
-      )
-      .stateChanges()
-      .pipe(map(actions => this.handleTweetsData(actions)))
-      .subscribe(
-        actions => {
-          actions.forEach(action => {
-            this.store.dispatch({
-              type: `[Tweet] All Tweets ${action.type}`,
-              payload: action.payload
-            });
-          });
-          this.store.dispatch(new UI.StopLoadingAllTweets());
-        },
-        error => {
-          this.uiService.showSnackBar(error.message);
-          this.store.dispatch(new UI.StopLoadingAllTweets());
-        }
-      );
-  }
-
-  fetchAllTweetsMore() {
+  fetchAllTweets(limit: number = 10) {
     this.store.dispatch(new UI.StartLoadingAllTweets());
     this.store
       .select(fromRoot.getAllTweetsCursor)
       .pipe(take(1))
       .subscribe(cursor => {
-        this.db
-          .collection<Tweet>('tweets', ref =>
-            ref
-              .where('parentId', '==', null)
-              .limit(10)
-              .orderBy('createdAt', 'desc')
-              .startAfter(cursor)
-          )
-          .stateChanges()
-          .pipe(map(actions => this.handleTweetsData(actions)))
-          .subscribe(
-            actions => {
-              if (!actions.length) {
-                this.store.dispatch(new TweetActions.SetAllTweetsDone());
-              }
-              actions.forEach(action => {
-                this.store.dispatch({
-                  type: `[Tweet] All Tweets ${action.type}`,
-                  payload: action.payload
-                });
-              });
-              this.store.dispatch(new UI.StopLoadingAllTweets());
-            },
-            error => {
-              this.uiService.showSnackBar(error.message);
-              this.store.dispatch(new UI.StopLoadingAllTweets());
+        let tweets$: Observable<DocumentChangeAction<Tweet>[]>;
+        if (cursor) {
+          tweets$ = this.db
+            .collection<Tweet>('tweets', ref =>
+              ref
+                .where('parentId', '==', null)
+                .limit(limit)
+                .orderBy('createdAt', 'desc')
+                .startAfter(cursor)
+            )
+            .stateChanges();
+        } else {
+          tweets$ = this.db
+            .collection<Tweet>('tweets', ref =>
+              ref
+                .where('parentId', '==', null)
+                .limit(limit)
+                .orderBy('createdAt', 'desc')
+            )
+            .stateChanges();
+        }
+
+        tweets$.pipe(map(actions => this.handleTweetsData(actions))).subscribe(
+          actions => {
+            if (!actions.length || actions.length < limit) {
+              this.store.dispatch(new TweetActions.SetAllTweetsDone());
             }
-          );
+            actions.forEach(action => {
+              this.store.dispatch({
+                type: `[Tweet] All Tweets ${action.type}`,
+                payload: action.payload
+              });
+            });
+            this.store.dispatch(new UI.StopLoadingAllTweets());
+          },
+          error => {
+            this.uiService.showSnackBar(error.message);
+            this.store.dispatch(new UI.StopLoadingAllTweets());
+          }
+        );
       });
   }
 

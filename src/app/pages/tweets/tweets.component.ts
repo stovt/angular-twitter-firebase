@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ScrollDispatcher, CdkScrollable } from '@angular/cdk/overlay';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { Tweet } from '../../tweet/tweet.model';
 import { TweetService } from '../../tweet/tweet.service';
@@ -14,11 +14,12 @@ import * as fromRoot from '../../app.reducer';
 })
 export class TweetsComponent implements OnInit, OnDestroy {
   tweets: Tweet[];
-  isLoading$: Observable<boolean>;
   isLoading: boolean;
+  isDone: boolean;
 
-  loadingSub: Subscription;
   tweetsSub: Subscription;
+  loadingSub: Subscription;
+  doneSub: Subscription;
   scrollingSub: Subscription;
 
   constructor(
@@ -33,12 +34,16 @@ export class TweetsComponent implements OnInit, OnDestroy {
       this.isLoading = isLoading;
       this.cdr.detectChanges();
     });
+    this.doneSub = this.store.select(fromRoot.getIsAllTweetsLoaded).subscribe(isDone => {
+      this.isDone = isDone;
+      this.cdr.detectChanges();
+    });
     this.tweetsSub = this.store.select(fromRoot.getAllTweets).subscribe(tweets => {
       this.tweets = tweets;
     });
 
     if (!this.tweets.length) {
-      this.tweetService.fetchAllTweetsInit();
+      this.tweetService.fetchAllTweets();
     }
 
     this.scrollingSub = this.scroll.scrolled().subscribe((data: CdkScrollable) => {
@@ -48,8 +53,8 @@ export class TweetsComponent implements OnInit, OnDestroy {
       const height = el.scrollHeight;
       const offset = el.offsetHeight;
 
-      if (top > height - offset - 1 && !this.isLoading) {
-        this.tweetService.fetchAllTweetsMore();
+      if (top > height - offset - 1 && !this.isLoading && !this.isDone) {
+        this.tweetService.fetchAllTweets();
       }
     });
   }
@@ -59,11 +64,14 @@ export class TweetsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.tweetsSub) {
+      this.tweetsSub.unsubscribe();
+    }
     if (this.loadingSub) {
       this.loadingSub.unsubscribe();
     }
-    if (this.tweetsSub) {
-      this.tweetsSub.unsubscribe();
+    if (this.doneSub) {
+      this.doneSub.unsubscribe();
     }
     if (this.scrollingSub) {
       this.scrollingSub.unsubscribe();
