@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-twitter-v2": {
+    "angular-twitter-firebase": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/angular-twitter-v2",
+            "outputPath": "dist/angular-twitter-firebase",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -64,18 +64,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "angular-twitter-v2:build"
+            "browserTarget": "angular-twitter-firebase:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "angular-twitter-v2:build:production"
+              "browserTarget": "angular-twitter-firebase:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-twitter-v2:build"
+            "browserTarget": "angular-twitter-firebase:build"
           }
         },
         "test": {
@@ -113,16 +113,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "angular-twitter-v2:serve"
+            "devServerTarget": "angular-twitter-firebase:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "angular-twitter-v2:serve:production"
+              "devServerTarget": "angular-twitter-firebase:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "angular-twitter-v2"
+  "defaultProject": "angular-twitter-firebase"
 }

@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/angular-twitter-v2",
+    "public": "dist/angular-twitter-firebase",
     "ignore": [
       "firebase.json",
       "**/.*",
