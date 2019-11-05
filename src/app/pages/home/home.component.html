@@ -1,21 +1,20 @@
-<div *ngIf="user">
-  <h1 class="mat-h1 page-title">
-    Hi, <b>{{ user.displayName }}</b>
-  </h1>
-  <app-tweet-form></app-tweet-form>
-</div>
-
 <div *ngIf="!user">
   <h1 class="mat-h1 page-title">
     <a routerLink="/signin">Sign In</a> or <a routerLink="/signup">Sign Up</a> to post your tweets.
   </h1>
 </div>
 
-<app-tweet *ngFor="let tweet of tweets; trackBy: trackTweet" [tweet]="tweet"></app-tweet>
-<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<app-empty-placeholder *ngIf="!isLoading && !tweets.length">
-  You have no tweets posted. Tweet your message above
-</app-empty-placeholder>
-<app-empty-placeholder *ngIf="!isLoading && isDone && tweets.length">
-  You have reached the end
-</app-empty-placeholder>
+<div *ngIf="user">
+  <h1 class="mat-h1 page-title">
+    Hi, <b>{{ user.displayName }}</b>
+  </h1>
+  <app-tweet-form></app-tweet-form>
+  <app-tweet *ngFor="let tweet of tweets; trackBy: trackTweet" [tweet]="tweet"></app-tweet>
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <app-empty-placeholder *ngIf="!isLoading && !tweets.length">
+    You have no tweets posted. Tweet your message above
+  </app-empty-placeholder>
+  <app-empty-placeholder *ngIf="!isLoading && isDone && tweets.length">
+    You have reached the end
+  </app-empty-placeholder>
+</div>
