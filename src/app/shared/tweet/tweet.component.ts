@@ -51,7 +51,7 @@ export class TweetComponent implements OnInit, OnChanges, OnDestroy {
 
   onLikeTweet() {
     if (!this.user) {
-      this.uiService.showSnackBar('Sign In to like the tweet');
+      this.uiService.showWarningSnackBar('Sign In to like the tweet');
     } else {
       this.isTweetLiking = true;
 

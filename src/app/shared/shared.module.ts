@@ -12,6 +12,7 @@ import { CommentsComponent } from './comments/comments.component';
 import { CommentFormComponent } from './comments/comment-form/comment-form.component';
 import { CommentComponent } from './comments/comment/comment.component';
 import { EmptyPlaceholderComponent } from './empty-placeholder/empty-placeholder.component';
+import { SnackbarComponent } from './snackbar/snackbar.component';
 
 @NgModule({
   imports: [CommonModule, RouterModule, ReactiveFormsModule, MaterialModule, FlexLayoutModule],
@@ -33,7 +34,9 @@ import { EmptyPlaceholderComponent } from './empty-placeholder/empty-placeholder
     CommentsComponent,
     CommentFormComponent,
     CommentComponent,
-    EmptyPlaceholderComponent
-  ]
+    EmptyPlaceholderComponent,
+    SnackbarComponent
+  ],
+  entryComponents: [SnackbarComponent]
 })
 export class SharedModule {}

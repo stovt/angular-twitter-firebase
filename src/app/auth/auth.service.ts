@@ -63,14 +63,14 @@ export class AuthService {
         });
         this.router.navigate(['/']);
       })
-      .catch(error => this.uiService.showSnackBar(error.message));
+      .catch(error => this.uiService.showErrorSnackBar(error.message));
   }
 
   signInWithEmailAndPassword(authData: SignInAuthData) {
     return this.afAuth.auth
       .signInWithEmailAndPassword(authData.email, authData.password)
       .then(() => this.router.navigate(['/']))
-      .catch(error => this.uiService.showSnackBar(error.message));
+      .catch(error => this.uiService.showErrorSnackBar(error.message));
   }
 
   signInWithFacebook() {
@@ -89,7 +89,7 @@ export class AuthService {
   }
 
   signOut() {
-    this.afAuth.auth.signOut().catch(error => this.uiService.showSnackBar(error.message));
+    this.afAuth.auth.signOut().catch(error => this.uiService.showErrorSnackBar(error.message));
   }
 
   fetchUsers() {
@@ -102,9 +102,9 @@ export class AuthService {
           this.store.dispatch(new UI.StopLoadingUsers());
           this.store.dispatch(new Auth.SetUsers(users));
         },
-        () => {
+        error => {
           this.store.dispatch(new UI.StopLoadingUsers());
-          this.uiService.showSnackBar('Fetching users failed, please try anain later');
+          this.uiService.showErrorSnackBar(error.message);
         }
       );
   }
@@ -120,9 +120,9 @@ export class AuthService {
             this.store.dispatch(new UI.StopLoadingUser(id));
             this.store.dispatch(new Auth.SetUserById({ id, user }));
           },
-          () => {
+          error => {
             this.store.dispatch(new UI.StopLoadingUser(id));
-            this.uiService.showSnackBar('Fetching User failed, please try anain later');
+            this.uiService.showErrorSnackBar(error.message);
           }
         )
     );
@@ -139,7 +139,9 @@ export class AuthService {
       photoURL: user.photoURL
     };
 
-    userRef.set(data, { merge: true }).catch(error => this.uiService.showSnackBar(error.message));
+    userRef
+      .set(data, { merge: true })
+      .catch(error => this.uiService.showErrorSnackBar(error.message));
   }
 
   private socialSignIn(
@@ -148,7 +150,7 @@ export class AuthService {
     this.afAuth.auth
       .signInWithPopup(provider)
       .then(credential => this.updateUserData(credential.user))
-      .catch(error => this.uiService.showSnackBar(error.message));
+      .catch(error => this.uiService.showErrorSnackBar(error.message));
     this.router.navigate(['/']);
   }
 }

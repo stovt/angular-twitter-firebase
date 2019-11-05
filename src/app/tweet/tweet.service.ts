@@ -46,7 +46,7 @@ export class TweetService {
           })
           .catch(error => {
             this.store.dispatch(new UI.StopLoadingTweet());
-            this.uiService.showSnackBar(error.message);
+            this.uiService.showErrorSnackBar(error.message);
           });
       });
   }
@@ -83,7 +83,7 @@ export class TweetService {
           })
           .catch(error => {
             this.store.dispatch(new UI.StopLoadingComment(parentId));
-            this.uiService.showSnackBar(error.message);
+            this.uiService.showErrorSnackBar(error.message);
           });
       });
   }
@@ -130,7 +130,7 @@ export class TweetService {
             this.store.dispatch(new UI.StopLoadingAllTweets());
           },
           error => {
-            this.uiService.showSnackBar(error.message);
+            this.uiService.showErrorSnackBar(error.message);
             this.store.dispatch(new UI.StopLoadingAllTweets());
           }
         );
@@ -184,7 +184,7 @@ export class TweetService {
             this.store.dispatch(new UI.StopLoadingUserTweets(userId));
           },
           error => {
-            this.uiService.showSnackBar(error.message);
+            this.uiService.showErrorSnackBar(error.message);
             this.store.dispatch(new UI.StopLoadingUserTweets(userId));
           }
         );
@@ -217,7 +217,7 @@ export class TweetService {
         },
         error => {
           this.store.dispatch(new UI.StopLoadingComments(tweetId));
-          this.uiService.showSnackBar(error.message);
+          this.uiService.showErrorSnackBar(error.message);
         }
       );
   }
@@ -226,14 +226,14 @@ export class TweetService {
     return this.db
       .doc<Tweet>(`tweets/${id}`)
       .update({ likes })
-      .catch(e => this.uiService.showSnackBar(e.message));
+      .catch(e => this.uiService.showErrorSnackBar(e.message));
   }
 
   removeTweet(id: string) {
     return this.db
       .doc<Tweet>(`tweets/${id}`)
       .delete()
-      .catch(e => this.uiService.showSnackBar(e.message));
+      .catch(e => this.uiService.showErrorSnackBar(e.message));
   }
 
   private handleTweetsData(actions: DocumentChangeAction<Tweet>[]) {
