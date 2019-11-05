@@ -19,6 +19,8 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
   commentsSub: Subscription;
 
+  isAuth$: Observable<boolean>;
+
   constructor(private store: Store<fromRoot.State>, private tweetService: TweetService) {}
 
   ngOnInit() {
@@ -30,6 +32,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
     if (!this.comments.length) {
       this.tweetService.fetchTweetComments(this.tweetId);
     }
+    this.isAuth$ = this.store.select(fromRoot.getIsAuth);
   }
 
   trackComment(index: number, item: Tweet) {

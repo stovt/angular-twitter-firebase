@@ -6,6 +6,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Tweet } from '../../tweet/tweet.model';
 import { User } from '../../auth/user.model';
 import { TweetService } from '../../tweet/tweet.service';
+import { UIService } from '../ui.service';
 import * as fromRoot from '../../app.reducer';
 
 @Component({
@@ -26,7 +27,11 @@ export class TweetComponent implements OnInit, OnChanges, OnDestroy {
   isTweetLiking = false;
   isTweetRemoving = false;
 
-  constructor(private store: Store<fromRoot.State>, private tweetService: TweetService) {}
+  constructor(
+    private store: Store<fromRoot.State>,
+    private tweetService: TweetService,
+    private uiService: UIService
+  ) {}
 
   ngOnInit() {
     this.userSub = this.store.select(fromRoot.getUser).subscribe(user => {
@@ -45,19 +50,23 @@ export class TweetComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onLikeTweet() {
-    this.isTweetLiking = true;
-
-    let likes: string[];
-    if (this.isLiked) {
-      likes = this.tweet.likes.filter(userId => userId !== this.user.userId);
+    if (!this.user) {
+      this.uiService.showSnackBar('Sign In to like the tweet');
     } else {
-      likes = [...this.tweet.likes, this.user.userId];
-    }
+      this.isTweetLiking = true;
 
-    this.tweetService
-      .likeTweet(this.tweet.id, likes)
-      .then(() => (this.isTweetLiking = false))
-      .catch(() => (this.isTweetLiking = false));
+      let likes: string[];
+      if (this.isLiked) {
+        likes = this.tweet.likes.filter(userId => userId !== this.user.userId);
+      } else {
+        likes = [...this.tweet.likes, this.user.userId];
+      }
+
+      this.tweetService
+        .likeTweet(this.tweet.id, likes)
+        .then(() => (this.isTweetLiking = false))
+        .catch(() => (this.isTweetLiking = false));
+    }
   }
 
   onRemoveTweet() {

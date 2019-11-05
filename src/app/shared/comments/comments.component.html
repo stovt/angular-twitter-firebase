@@ -1,6 +1,6 @@
-<mat-divider vertical></mat-divider>
+<mat-divider *ngIf="isAuth$ | async" vertical></mat-divider>
 <div class="comments" [ngClass.lt-md]="'is-mobile'">
-  <app-tweet-comment-form [tweetId]="tweetId"></app-tweet-comment-form>
+  <app-tweet-comment-form *ngIf="isAuth$ | async" [tweetId]="tweetId"></app-tweet-comment-form>
   <app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
   <app-tweet-comment
     *ngFor="let comment of comments; let i = index; trackBy: trackComment"
