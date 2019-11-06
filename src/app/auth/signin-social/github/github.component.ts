@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 
@@ -9,7 +9,7 @@ import { AuthService } from '../../auth.service';
   templateUrl: './github.component.html',
   styleUrls: ['./github.component.css']
 })
-export class GithubComponent implements OnInit {
+export class GithubComponent {
   constructor(
     private authService: AuthService,
     iconRegistry: MatIconRegistry,
@@ -20,8 +20,6 @@ export class GithubComponent implements OnInit {
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/github.svg')
     );
   }
-
-  ngOnInit() {}
 
   onSignInGithub() {
     this.authService.signInWithGithub();

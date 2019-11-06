@@ -5,8 +5,4 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './signin-social.component.html',
   styleUrls: ['./signin-social.component.css']
 })
-export class SigninSocialComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit() {}
-}
+export class SigninSocialComponent {}

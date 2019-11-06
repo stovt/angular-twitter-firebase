@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { AuthService } from '../../../auth/auth.service';
 
@@ -7,10 +7,8 @@ import { AuthService } from '../../../auth/auth.service';
   templateUrl: './profile-image.component.html',
   styleUrls: ['./profile-image.component.css']
 })
-export class ProfileImageComponent implements OnInit {
+export class ProfileImageComponent {
   constructor(private authService: AuthService) {}
-
-  ngOnInit() {}
 
   onLogout() {
     this.authService.signOut();

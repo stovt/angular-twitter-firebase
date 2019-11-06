@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { formatDistanceToNow } from 'date-fns';
 
 import { Tweet } from '../../../tweet/tweet.model';
@@ -8,12 +8,10 @@ import { Tweet } from '../../../tweet/tweet.model';
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.css']
 })
-export class CommentComponent implements OnInit {
+export class CommentComponent {
   @Input() comment: Tweet;
 
   constructor() {}
-
-  ngOnInit() {}
 
   get date() {
     return formatDistanceToNow(this.comment.createdAt.toDate());

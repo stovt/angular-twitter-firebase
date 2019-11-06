@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 
@@ -9,7 +9,7 @@ import { AuthService } from '../../auth.service';
   templateUrl: './google.component.html',
   styleUrls: ['./google.component.css']
 })
-export class GoogleComponent implements OnInit {
+export class GoogleComponent {
   constructor(
     private authService: AuthService,
     iconRegistry: MatIconRegistry,
@@ -20,8 +20,6 @@ export class GoogleComponent implements OnInit {
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/google.svg')
     );
   }
-
-  ngOnInit() {}
 
   onSignInGoogle() {
     this.authService.signInWithGoogle();
