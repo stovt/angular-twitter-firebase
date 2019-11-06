@@ -20,6 +20,9 @@ export class SignupComponent implements OnInit {
       lastName: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      phone: new FormControl('', [
+        Validators.pattern('[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}')
+      ]),
       confirmPassword: new FormControl('', [Validators.required, this.equalsTo('password')]),
       agree: new FormControl('', [Validators.requiredTrue])
     });
@@ -29,17 +32,19 @@ export class SignupComponent implements OnInit {
     firstName: string;
     lastName: string;
     email: string;
+    phone?: string;
     password: string;
     confirmPassword: string;
   }) {
     this.isLoading = true;
-    const { firstName, lastName, email, password } = data;
+    const { firstName, lastName, email, phone, password } = data;
 
     this.authService
       .signUpWithEmailAndPassword({
         firstName,
         lastName,
         email,
+        phone,
         password
       })
       .then(() => (this.isLoading = false));

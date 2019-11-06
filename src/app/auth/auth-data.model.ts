@@ -7,5 +7,6 @@ export interface SignUpAuthData {
   firstName: string;
   lastName: string;
   email: string;
+  phone?: string;
   password: string;
 }

@@ -59,7 +59,8 @@ export class AuthService {
       .then(credential => {
         this.updateUserData({
           ...credential.user,
-          displayName: `${authData.firstName} ${authData.lastName}`
+          displayName: `${authData.firstName} ${authData.lastName}`,
+          phoneNumber: authData.phone
         });
         this.router.navigate(['/']);
       })
@@ -136,7 +137,8 @@ export class AuthService {
       userId: user.uid,
       email: user.email,
       displayName: user.displayName,
-      photoURL: user.photoURL
+      photoURL: user.photoURL,
+      phoneNumber: user.phoneNumber
     };
 
     userRef
@@ -149,7 +151,11 @@ export class AuthService {
   ) {
     this.afAuth.auth
       .signInWithPopup(provider)
-      .then(credential => this.updateUserData(credential.user))
+      .then(credential => {
+        if (credential.additionalUserInfo.isNewUser) {
+          this.updateUserData(credential.user);
+        }
+      })
       .catch(error => this.uiService.showErrorSnackBar(error.message));
     this.router.navigate(['/']);
   }
