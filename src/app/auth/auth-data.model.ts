@@ -15,4 +15,5 @@ export interface ProfileSettingsData {
   userId: string;
   name: string;
   phone?: string;
+  photo?: File;
 }

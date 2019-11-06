@@ -4,8 +4,9 @@ import { Store } from '@ngrx/store';
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { of, Subscription, Subject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, finalize, first } from 'rxjs/operators';
 
 import { User } from './user.model';
 import { SignInAuthData, SignUpAuthData, ProfileSettingsData } from './auth-data.model';
@@ -24,6 +25,7 @@ export class AuthService {
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
+    private afStorage: AngularFireStorage,
     private router: Router,
     private uiService: UIService,
     private store: Store<fromRoot.State>
@@ -130,15 +132,64 @@ export class AuthService {
   }
 
   updateProfileSettings(data: ProfileSettingsData) {
+    this.store.dispatch(new UI.StartLoadingProfileSettings());
+
     const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${data.userId}`);
 
-    return userRef
-      .update({
-        displayName: data.name,
-        phoneNumber: data.phone
-      })
-      .then(() => this.uiService.showSuccessSnackBar('The changes have been saved'))
-      .catch(error => this.uiService.showErrorSnackBar(error.message));
+    if (data.photo) {
+      const photoPath = `avatars/${new Date().getTime()}_${data.photo.name}`;
+
+      const fileRef: AngularFireStorageReference = this.afStorage.ref(photoPath);
+
+      const task = this.afStorage.upload(photoPath, data.photo);
+
+      task
+        .snapshotChanges()
+        .pipe(
+          finalize(() => {
+            fileRef
+              .getDownloadURL()
+              .pipe(first())
+              .subscribe((photoURL: string) => {
+                userRef
+                  .update({
+                    displayName: data.name,
+                    phoneNumber: data.phone,
+                    photoURL
+                  })
+                  .then(() => {
+                    this.store.dispatch(new UI.StopLoadingProfileSettings());
+                    this.uiService.showSuccessSnackBar('The changes have been saved');
+                  })
+                  .catch(error => {
+                    this.store.dispatch(new UI.StopLoadingProfileSettings());
+                    this.uiService.showErrorSnackBar(error.message);
+                  });
+              });
+          })
+        )
+        .subscribe(
+          () => {},
+          error => {
+            this.store.dispatch(new UI.StopLoadingProfileSettings());
+            this.uiService.showErrorSnackBar(error.message);
+          }
+        );
+    } else {
+      userRef
+        .update({
+          displayName: data.name,
+          phoneNumber: data.phone
+        })
+        .then(() => {
+          this.store.dispatch(new UI.StopLoadingProfileSettings());
+          this.uiService.showSuccessSnackBar('The changes have been saved');
+        })
+        .catch(error => {
+          this.store.dispatch(new UI.StopLoadingProfileSettings());
+          this.uiService.showErrorSnackBar(error.message);
+        });
+    }
   }
 
   private updateUserData(user: firebase.User) {

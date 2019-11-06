@@ -13,7 +13,9 @@ import {
   START_LOADING_COMMENT,
   STOP_LOADING_COMMENT,
   START_LOADING_COMMENTS,
-  STOP_LOADING_COMMENTS
+  STOP_LOADING_COMMENTS,
+  START_LOADING_PROFILE_SETTINGS,
+  STOP_LOADING_PROFILE_SETTINGS
 } from './ui.actions';
 
 export interface State {
@@ -24,6 +26,7 @@ export interface State {
   isAllTweetsLoading: boolean;
   isTweetsByUserIdLoading: Record<string, boolean>;
   isUserLoading: Record<string, boolean>;
+  isProfileSettingsLoading: boolean;
 }
 
 const initialState: State = {
@@ -33,7 +36,8 @@ const initialState: State = {
   isCommentsByTweetIdLoading: {},
   isAllTweetsLoading: false,
   isTweetsByUserIdLoading: {},
-  isUserLoading: {}
+  isUserLoading: {},
+  isProfileSettingsLoading: false
 };
 
 export function uiReducer(state = initialState, action: UIActions) {
@@ -132,6 +136,16 @@ export function uiReducer(state = initialState, action: UIActions) {
           [action.payload]: false
         }
       };
+    case START_LOADING_PROFILE_SETTINGS:
+      return {
+        ...state,
+        isProfileSettingsLoading: true
+      };
+    case STOP_LOADING_PROFILE_SETTINGS:
+      return {
+        ...state,
+        isProfileSettingsLoading: false
+      };
     default:
       return state;
   }
@@ -147,3 +161,4 @@ export const getIsCommentByTweetIdLoading = (tweetId: string) => (state: State) 
   state.isCommentByTweetIdLoading[tweetId] || false;
 export const getIsCommentsByTweetIdLoading = (tweetId: string) => (state: State) =>
   state.isCommentsByTweetIdLoading[tweetId] || false;
+export const getIsProfileSettingsLoading = (state: State) => state.isProfileSettingsLoading;

@@ -3,7 +3,7 @@
   <mat-card fxFlex.lt-md="95%" fxFlex="750px">
     <mat-card-header fxLayoutAlign="flex-start center">
       <a [routerLink]="['/users', comment.user.userId]" mat-card-avatar>
-        <img mat-card-avatar [src]="comment.user.photoURL" />
+        <img mat-card-avatar [src]="comment.user.photoURL" [alt]="comment.user.displayName" />
       </a>
       <a [routerLink]="['/users', comment.user.userId]" mat-card-title>
         {{ comment.user.displayName }}

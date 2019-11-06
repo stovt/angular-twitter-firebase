@@ -50,6 +50,10 @@ export const getIsCommentsByTweetIdLoading = (tweetId: string) =>
     getUiState,
     fromUi.getIsCommentsByTweetIdLoading(tweetId)
   );
+export const getIsProfileSettingsLoading = createSelector(
+  getUiState,
+  fromUi.getIsProfileSettingsLoading
+);
 
 /* Auth reducer */
 export const getAuthState = createFeatureSelector<fromAuth.State>('auth');

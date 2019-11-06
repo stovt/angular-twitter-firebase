@@ -1,8 +1,11 @@
 <div class="profile-image">
-  <img
-    [matMenuTriggerFor]="profileMenu"
-    src="https://lh3.googleusercontent.com/a-/AAuE7mBnpLtt7nE5yqXb2Mo4S2ickHo7J9Nz5vz_w__2"
-  />
+  <div *ngIf="user.photoURL" class="photo-container">
+    <img [matMenuTriggerFor]="profileMenu" [src]="user.photoURL" [alt]="user.displayName" />
+  </div>
+  <div *ngIf="!user.photoURL" [matMenuTriggerFor]="profileMenu" fxLayoutAlign="center center">
+    <mat-icon class="person-icon">person</mat-icon>
+    <div class="dropdown-caret"></div>
+  </div>
 </div>
 <mat-menu #profileMenu="matMenu">
   <a mat-menu-item routerLink="/profile-settings">

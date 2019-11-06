@@ -7,6 +7,21 @@
     [formGroup]="profileSettingsForm"
     (ngSubmit)="onSubmit(profileSettingsForm.value)"
   >
+    <div class="profile-image">
+      <img *ngIf="photoURL" [src]="photoURL" [alt]="user.displayName" />
+      <mat-icon *ngIf="!photoURL">person</mat-icon>
+    </div>
+    <div>
+      <button type="button" mat-raised-button (click)="fileInput.click()">Change image</button>
+      <input
+        hidden
+        (change)="onFileSelected($event.target.files)"
+        #fileInput
+        type="file"
+        accept=".jpg, .png, .jpeg"
+        id="file-photo"
+      />
+    </div>
     <mat-form-field>
       <input type="text" matInput placeholder="Your name" formControlName="name" required />
       <mat-hint>Please enter your name.</mat-hint>
@@ -21,7 +36,7 @@
       <mat-error>Invalid phone.</mat-error>
     </mat-form-field>
     <button
-      *ngIf="!isLoading"
+      *ngIf="(isLoading$ | async) === false"
       type="submit"
       mat-raised-button
       color="primary"
@@ -29,6 +44,6 @@
     >
       Save
     </button>
-    <mat-spinner *ngIf="isLoading" diameter="36"></mat-spinner>
+    <mat-spinner *ngIf="isLoading$ | async" diameter="36"></mat-spinner>
   </form>
 </section>

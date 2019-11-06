@@ -1,7 +1,11 @@
 .profile-image {
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.profile-image .photo-container {
   height: 32px;
   width: 32px;
-  margin-left: 8px;
 }
 
 .profile-image img {
@@ -9,9 +13,26 @@
   width: 32px;
   border-radius: 50%;
   object-fit: cover;
-  cursor: pointer;
+}
+
+.profile-image .person-icon {
+  width: 32px;
+  height: 32px;
+  font-size: 32px;
+  padding: 0;
 }
 
 a {
   text-decoration: none;
+}
+
+.dropdown-caret {
+  width: 0;
+  height: 0;
+  content: '';
+  border-top-style: solid;
+  border-top-width: 4px;
+  border-right: 4px solid transparent;
+  border-bottom: 0 solid transparent;
+  border-left: 4px solid transparent;
 }

@@ -3,7 +3,7 @@
   <mat-card *ngIf="user" fxFlex.lt-md="100%" fxFlex="800px" color="primary">
     <mat-card-header fxLayoutAlign="flex-start center">
       <a [routerLink]="['/users', user.userId]" mat-card-avatar>
-        <img *ngIf="user.photoURL" mat-card-avatar [src]="user.photoURL" />
+        <img *ngIf="user.photoURL" mat-card-avatar [src]="user.photoURL" [alt]="user.displayName" />
         <mat-icon *ngIf="!user.photoURL" mat-card-avatar>person</mat-icon>
       </a>
       <a [routerLink]="['/users', user.userId]" mat-card-title>

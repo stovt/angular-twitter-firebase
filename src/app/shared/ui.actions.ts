@@ -14,6 +14,8 @@ export const START_LOADING_COMMENT = '[UI] Start Loading Comment';
 export const STOP_LOADING_COMMENT = '[UI] Stop Loading Comment';
 export const START_LOADING_COMMENTS = '[UI] Start Loading Comments';
 export const STOP_LOADING_COMMENTS = '[UI] Stop Loading Comments';
+export const START_LOADING_PROFILE_SETTINGS = '[UI] Start Loading Profile Settings';
+export const STOP_LOADING_PROFILE_SETTINGS = '[UI] Stop Loading Profile Settings';
 
 export class StartLoadingUsers implements Action {
   readonly type = START_LOADING_USERS;
@@ -87,6 +89,14 @@ export class StopLoadingComments implements Action {
   constructor(public payload: string) {}
 }
 
+export class StartLoadingProfileSettings implements Action {
+  readonly type = START_LOADING_PROFILE_SETTINGS;
+}
+
+export class StopLoadingProfileSettings implements Action {
+  readonly type = STOP_LOADING_PROFILE_SETTINGS;
+}
+
 export type UIActions =
   | StartLoadingUsers
   | StopLoadingUsers
@@ -101,4 +111,6 @@ export type UIActions =
   | StartLoadingComment
   | StopLoadingComment
   | StartLoadingComments
-  | StopLoadingComments;
+  | StopLoadingComments
+  | StartLoadingProfileSettings
+  | StopLoadingProfileSettings;

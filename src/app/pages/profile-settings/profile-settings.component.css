@@ -5,3 +5,24 @@ mat-form-field {
 .m-b-0 {
   margin-bottom: 0 !important;
 }
+
+.profile-image {
+  height: 128px;
+  width: 128px;
+}
+
+.profile-image img {
+  height: 128px;
+  width: 128px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.profile-image mat-icon {
+  color: #000;
+  width: 128px;
+  height: 128px;
+  font-size: 128px;
+  padding: 0;
+}
