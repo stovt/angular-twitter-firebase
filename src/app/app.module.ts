@@ -17,6 +17,8 @@ import { UsersComponent } from './pages/users/users.component';
 import { TweetsComponent } from './pages/tweets/tweets.component';
 import { UserComponent } from './pages/user/user.component';
 import { reducers } from './app.reducer';
+import { ProfileImageComponent } from './navigation/header/profile-image/profile-image.component';
+import { ProfileSettingsComponent } from './pages/profile-settings/profile-settings.component';
 
 @NgModule({
   declarations: [
@@ -24,9 +26,11 @@ import { reducers } from './app.reducer';
     HomeComponent,
     HeaderComponent,
     SidenavListComponent,
+    ProfileImageComponent,
     UsersComponent,
     TweetsComponent,
-    UserComponent
+    UserComponent,
+    ProfileSettingsComponent
   ],
   imports: [
     BrowserModule,

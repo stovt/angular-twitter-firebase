@@ -10,3 +10,9 @@ export interface SignUpAuthData {
   phone?: string;
   password: string;
 }
+
+export interface ProfileSettingsData {
+  userId: string;
+  name: string;
+  phone?: string;
+}

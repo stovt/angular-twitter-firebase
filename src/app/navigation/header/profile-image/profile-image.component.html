@@ -1,0 +1,17 @@
+<div class="profile-image">
+  <img
+    [matMenuTriggerFor]="profileMenu"
+    src="https://lh3.googleusercontent.com/a-/AAuE7mBnpLtt7nE5yqXb2Mo4S2ickHo7J9Nz5vz_w__2"
+  />
+</div>
+<mat-menu #profileMenu="matMenu">
+  <a mat-menu-item routerLink="/profile-settings">
+    <mat-icon>settings_applications</mat-icon>
+    <span class="nav-caption">Settings</span>
+  </a>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="onLogout()">
+    <mat-icon>eject</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>

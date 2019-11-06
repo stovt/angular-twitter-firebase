@@ -8,7 +8,7 @@ import { of, Subscription, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { User } from './user.model';
-import { SignInAuthData, SignUpAuthData } from './auth-data.model';
+import { SignInAuthData, SignUpAuthData, ProfileSettingsData } from './auth-data.model';
 import { UIService } from '../shared/ui.service';
 import * as UI from '../shared/ui.actions';
 import * as Auth from './auth.actions';
@@ -129,8 +129,20 @@ export class AuthService {
     );
   }
 
+  updateProfileSettings(data: ProfileSettingsData) {
+    const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${data.userId}`);
+
+    return userRef
+      .update({
+        displayName: data.name,
+        phoneNumber: data.phone
+      })
+      .then(() => this.uiService.showSuccessSnackBar('The changes have been saved'))
+      .catch(error => this.uiService.showErrorSnackBar(error.message));
+  }
+
   private updateUserData(user: firebase.User) {
-    // Sets user data to firestore on login
+    // Sets user data to firestore on sign up
     const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
 
     const data: User = {
