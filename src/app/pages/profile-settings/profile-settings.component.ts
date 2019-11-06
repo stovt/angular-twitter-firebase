@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { AuthService } from '../../auth/auth.service';
   templateUrl: './profile-settings.component.html',
   styleUrls: ['./profile-settings.component.css']
 })
-export class ProfileSettingsComponent implements OnInit {
+export class ProfileSettingsComponent implements OnInit, OnDestroy {
   profileSettingsForm: FormGroup;
   isLoading = false;
 
@@ -49,5 +49,11 @@ export class ProfileSettingsComponent implements OnInit {
       })
       .then(() => (this.isLoading = false))
       .catch(() => (this.isLoading = false));
+  }
+
+  ngOnDestroy() {
+    if (this.userSub) {
+      this.userSub.unsubscribe();
+    }
   }
 }
