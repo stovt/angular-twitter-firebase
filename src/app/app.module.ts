@@ -20,6 +20,7 @@ import { UserComponent } from './pages/user/user.component';
 import { reducers } from './app.reducer';
 import { ProfileImageComponent } from './navigation/header/profile-image/profile-image.component';
 import { ProfileSettingsComponent } from './pages/profile-settings/profile-settings.component';
+import { ConfirmationDialogComponent } from './pages/profile-settings/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { ProfileSettingsComponent } from './pages/profile-settings/profile-setti
     UsersComponent,
     TweetsComponent,
     UserComponent,
-    ProfileSettingsComponent
+    ProfileSettingsComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +46,7 @@ import { ProfileSettingsComponent } from './pages/profile-settings/profile-setti
     SharedModule,
     AuthModule
   ],
+  entryComponents: [ConfirmationDialogComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

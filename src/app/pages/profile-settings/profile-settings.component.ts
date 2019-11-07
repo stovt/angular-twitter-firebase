@@ -2,7 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { User } from '../../auth/user.model';
 import { AuthService } from '../../auth/auth.service';
 import { UIService } from '../../shared/ui.service';
@@ -22,16 +24,19 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   photo: File;
   photoURL: string;
 
+  isProfileDeleting = false;
+
   constructor(
     private store: Store<fromRoot.State>,
     private authService: AuthService,
-    private uiService: UIService
+    private uiService: UIService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit() {
     this.userSub = this.store.select(fromRoot.getUser).subscribe(user => {
       this.user = user;
-      this.photoURL = user.photoURL;
+      this.photoURL = user ? user.photoURL : null;
     });
 
     this.isLoading$ = this.store.select(fromRoot.getIsProfileSettingsLoading);
@@ -87,6 +92,20 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       name,
       phone,
       photo: this.photo
+    });
+  }
+
+  onDeleteProfile() {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent);
+
+    dialogRef.afterClosed().subscribe((res: boolean) => {
+      if (res) {
+        this.isProfileDeleting = true;
+        this.authService
+          .deleteUser()
+          .then(() => (this.isProfileDeleting = false))
+          .catch(() => (this.isProfileDeleting = false));
+      }
     });
   }
 

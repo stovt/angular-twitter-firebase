@@ -1,0 +1,8 @@
+<div fxLayout="column" fxLayoutAlign="center center">
+  <h1 mat-dialog-title>Are you sure you want to delete your profile?</h1>
+  <div mat-dialog-content>All your tweets and comments will be removed as well.</div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" [mat-dialog-close]="false" cdkFocusInitial>No</button>
+    <button mat-raised-button color="warn" [mat-dialog-close]="true">Yes</button>
+  </div>
+</div>

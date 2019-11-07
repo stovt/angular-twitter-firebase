@@ -95,6 +95,13 @@ export class AuthService {
     this.afAuth.auth.signOut().catch(error => this.uiService.showErrorSnackBar(error.message));
   }
 
+  deleteUser() {
+    return this.afAuth.auth.currentUser
+      .delete()
+      .then(() => this.uiService.showSuccessSnackBar('The profile has been deleted'))
+      .catch(error => this.uiService.showErrorSnackBar(error.message));
+  }
+
   fetchUsers() {
     this.store.dispatch(new UI.StartLoadingUsers());
     this.afs

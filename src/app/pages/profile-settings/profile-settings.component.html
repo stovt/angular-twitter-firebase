@@ -46,4 +46,19 @@
     </button>
     <mat-spinner *ngIf="isLoading$ | async" diameter="36"></mat-spinner>
   </form>
+  <div fxLayoutAlign="center">
+    <mat-divider fxFlex="300px;"></mat-divider>
+  </div>
+  <div fxLayoutAlign="center">
+    <button
+      *ngIf="!isProfileDeleting"
+      type="button"
+      mat-raised-button
+      color="warn"
+      (click)="onDeleteProfile()"
+    >
+      Delete profile
+    </button>
+    <mat-spinner *ngIf="isProfileDeleting" diameter="36"></mat-spinner>
+  </div>
 </section>

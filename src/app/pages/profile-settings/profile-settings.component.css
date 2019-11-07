@@ -30,3 +30,7 @@ mat-form-field {
   font-size: 128px;
   padding: 0;
 }
+
+mat-divider {
+  margin: 16px 0;
+}
