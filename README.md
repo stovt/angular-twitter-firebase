@@ -25,7 +25,7 @@ yarn install
 3. Go to **Database** that is located under project console navigation group and create **Cloud Firestore**.
 5. Go to **Authentication** that is also located under project console navigation group and set up **Email/Password**, **Google**, **Facebook** and **GitHub**  sign-in methods.
 6. Go to **Storage** that is also located under project console navigation group and set up **Cloud Storage**.
-7. Deploy the application by running `firebase deploy`
+7. Deploy the application by running `yarn build && firebase deploy`
 
 ## Running locally
 
