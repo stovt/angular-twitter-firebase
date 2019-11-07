@@ -1,6 +1,7 @@
 <div class="profile-image">
-  <div *ngIf="user.photoURL" class="photo-container">
+  <div *ngIf="user.photoURL" class="photo-container" fxLayoutAlign="center center">
     <img [matMenuTriggerFor]="profileMenu" [src]="user.photoURL" [alt]="user.displayName" />
+    <div class="dropdown-caret"></div>
   </div>
   <div *ngIf="!user.photoURL" [matMenuTriggerFor]="profileMenu" fxLayoutAlign="center center">
     <mat-icon class="person-icon">person</mat-icon>

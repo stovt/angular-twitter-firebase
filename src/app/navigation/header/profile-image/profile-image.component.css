@@ -3,11 +3,6 @@
   cursor: pointer;
 }
 
-.profile-image .photo-container {
-  height: 32px;
-  width: 32px;
-}
-
 .profile-image img {
   height: 32px;
   width: 32px;
@@ -35,4 +30,8 @@ a {
   border-right: 4px solid transparent;
   border-bottom: 0 solid transparent;
   border-left: 4px solid transparent;
+}
+
+.photo-container .dropdown-caret {
+  margin-left: 4px;
 }
