@@ -4,6 +4,10 @@ service cloud.firestore {
     match /users/{userId} {
       allow read;
       allow write: if request.auth.uid == request.resource.data.userId;
+      allow update: if (
+        request.auth.uid == request.resource.data.userId
+        && request.resource.data.email == resource.data.email
+      );
     }
     match /tweets/{tweetId} {
       allow read;
