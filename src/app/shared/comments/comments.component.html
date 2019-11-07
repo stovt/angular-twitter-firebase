@@ -1,4 +1,4 @@
-<mat-divider *ngIf="isAuth$ | async" vertical></mat-divider>
+<mat-divider vertical></mat-divider>
 <div class="comments" [ngClass.lt-md]="'is-mobile'">
   <app-tweet-comment-form *ngIf="isAuth$ | async" [tweetId]="tweetId"></app-tweet-comment-form>
   <app-loading-spinner *ngIf="isLoading$ | async"></app-loading-spinner>
@@ -6,7 +6,12 @@
     *ngFor="let comment of comments; let i = index; trackBy: trackComment"
     [comment]="comment"
   ></app-tweet-comment>
-  <app-empty-placeholder *ngIf="(isLoading$ | async) === false && !comments.length">
-    Tweet has no comments posted. Comment the tweet above
-  </app-empty-placeholder>
+  <div *ngIf="(isLoading$ | async) === false && !comments.length">
+    <app-empty-placeholder *ngIf="isAuth$ | async">
+      Tweet has no comments posted. Comment the tweet above
+    </app-empty-placeholder>
+    <app-empty-placeholder *ngIf="(isAuth$ | async) === false">
+      Tweet has no comments posted
+    </app-empty-placeholder>
+  </div>
 </div>
