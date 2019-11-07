@@ -1,3 +1,5 @@
 .snackbar .message {
   margin-left: 8px;
+  word-break: break-all;
+  word-break: break-word;
 }
