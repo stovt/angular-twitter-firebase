@@ -6,7 +6,7 @@ import {
 } from '@angular/fire/firestore';
 import { Store } from '@ngrx/store';
 import { firestore } from 'firebase/app';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 
 import { Tweet } from './tweet.model';
@@ -17,6 +17,8 @@ import * as fromRoot from '../app.reducer';
 
 @Injectable({ providedIn: 'root' })
 export class TweetService {
+  fbSubs: Subscription[] = [];
+
   constructor(
     private db: AngularFirestore,
     private uiService: UIService,
@@ -116,23 +118,25 @@ export class TweetService {
             .stateChanges();
         }
 
-        tweets$.pipe(map(actions => this.handleTweetsData(actions))).subscribe(
-          actions => {
-            if (this.isTweetsLoaded(actions, limit)) {
-              this.store.dispatch(new TweetActions.SetAllTweetsDone());
-            }
-            actions.forEach(action => {
-              this.store.dispatch({
-                type: `[Tweet] All Tweets ${action.type}`,
-                payload: action.payload
+        this.fbSubs.push(
+          tweets$.pipe(map(actions => this.handleTweetsData(actions))).subscribe(
+            actions => {
+              if (this.isTweetsLoaded(actions, limit)) {
+                this.store.dispatch(new TweetActions.SetAllTweetsDone());
+              }
+              actions.forEach(action => {
+                this.store.dispatch({
+                  type: `[Tweet] All Tweets ${action.type}`,
+                  payload: action.payload
+                });
               });
-            });
-            this.store.dispatch(new UI.StopLoadingAllTweets());
-          },
-          error => {
-            this.uiService.showErrorSnackBar(error.message);
-            this.store.dispatch(new UI.StopLoadingAllTweets());
-          }
+              this.store.dispatch(new UI.StopLoadingAllTweets());
+            },
+            error => {
+              this.uiService.showErrorSnackBar(error.message);
+              this.store.dispatch(new UI.StopLoadingAllTweets());
+            }
+          )
         );
       });
   }
@@ -167,59 +171,63 @@ export class TweetService {
             .stateChanges();
         }
 
-        tweets$.pipe(map(actions => this.handleTweetsData(actions))).subscribe(
-          actions => {
-            if (this.isTweetsLoaded(actions, limit)) {
-              this.store.dispatch(new TweetActions.SetUserTweetsDone(userId));
-            }
-            actions.forEach(action => {
-              this.store.dispatch({
-                type: `[Tweet] User Tweets ${action.type}`,
-                payload: {
-                  ...action.payload,
-                  userId
-                }
+        this.fbSubs.push(
+          tweets$.pipe(map(actions => this.handleTweetsData(actions))).subscribe(
+            actions => {
+              if (this.isTweetsLoaded(actions, limit)) {
+                this.store.dispatch(new TweetActions.SetUserTweetsDone(userId));
+              }
+              actions.forEach(action => {
+                this.store.dispatch({
+                  type: `[Tweet] User Tweets ${action.type}`,
+                  payload: {
+                    ...action.payload,
+                    userId
+                  }
+                });
               });
-            });
-            this.store.dispatch(new UI.StopLoadingUserTweets(userId));
-          },
-          error => {
-            this.uiService.showErrorSnackBar(error.message);
-            this.store.dispatch(new UI.StopLoadingUserTweets(userId));
-          }
+              this.store.dispatch(new UI.StopLoadingUserTweets(userId));
+            },
+            error => {
+              this.uiService.showErrorSnackBar(error.message);
+              this.store.dispatch(new UI.StopLoadingUserTweets(userId));
+            }
+          )
         );
       });
   }
 
   fetchTweetComments(tweetId: string) {
     this.store.dispatch(new UI.StartLoadingComments(tweetId));
-    this.db
-      .collection<Tweet>('tweets', ref =>
-        ref.where('parentId', '==', tweetId).orderBy('createdAt', 'desc')
-      )
-      .snapshotChanges()
-      .pipe(
-        map(docArray => {
-          return docArray.map(doc => {
-            const id = doc.payload.doc.id;
-            const data = {
-              ...doc.payload.doc.data(),
-              createdAt: doc.payload.doc.data().createdAt || doc.payload.doc.data().createdAtLocal
-            };
-            return { id, ...data };
-          });
-        })
-      )
-      .subscribe(
-        comments => {
-          this.store.dispatch(new UI.StopLoadingComments(tweetId));
-          this.store.dispatch(new TweetActions.SetTweetComments({ tweetId, comments }));
-        },
-        error => {
-          this.store.dispatch(new UI.StopLoadingComments(tweetId));
-          this.uiService.showErrorSnackBar(error.message);
-        }
-      );
+    this.fbSubs.push(
+      this.db
+        .collection<Tweet>('tweets', ref =>
+          ref.where('parentId', '==', tweetId).orderBy('createdAt', 'desc')
+        )
+        .snapshotChanges()
+        .pipe(
+          map(docArray => {
+            return docArray.map(doc => {
+              const id = doc.payload.doc.id;
+              const data = {
+                ...doc.payload.doc.data(),
+                createdAt: doc.payload.doc.data().createdAt || doc.payload.doc.data().createdAtLocal
+              };
+              return { id, ...data };
+            });
+          })
+        )
+        .subscribe(
+          comments => {
+            this.store.dispatch(new UI.StopLoadingComments(tweetId));
+            this.store.dispatch(new TweetActions.SetTweetComments({ tweetId, comments }));
+          },
+          error => {
+            this.store.dispatch(new UI.StopLoadingComments(tweetId));
+            this.uiService.showErrorSnackBar(error.message);
+          }
+        )
+    );
   }
 
   likeTweet(id: string, likes: string[]) {
@@ -234,6 +242,10 @@ export class TweetService {
       .doc<Tweet>(`tweets/${id}`)
       .delete()
       .catch(e => this.uiService.showErrorSnackBar(e.message));
+  }
+
+  cancelSubscriptions() {
+    this.fbSubs.forEach(sub => sub.unsubscribe());
   }
 
   private handleTweetsData(actions: DocumentChangeAction<Tweet>[]) {

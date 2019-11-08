@@ -15,6 +15,7 @@ import * as UI from '../shared/ui.actions';
 import * as Auth from './auth.actions';
 import * as TweetActions from '../tweet/tweet.actions';
 import * as fromRoot from '../app.reducer';
+import { TweetService } from '../tweet/tweet.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -28,7 +29,8 @@ export class AuthService {
     private afStorage: AngularFireStorage,
     private router: Router,
     private uiService: UIService,
-    private store: Store<fromRoot.State>
+    private store: Store<fromRoot.State>,
+    private tweetService: TweetService
   ) {}
 
   initAuthListener() {
@@ -47,6 +49,7 @@ export class AuthService {
           this.store.dispatch(new Auth.SetUser(user));
           this.store.dispatch(new Auth.SetAuthenticated());
         } else {
+          this.tweetService.cancelSubscriptions();
           this.store.dispatch(new Auth.SetUnauthenticated());
           this.store.dispatch(new TweetActions.Reset());
           this.router.navigate(['/signin']);
